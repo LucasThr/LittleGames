@@ -10,8 +10,8 @@ import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import { Ionicons } from '@expo/vector-icons';
 import HomeGames from '../Components/HomeGames';
 import Settings from '../Components/Settings';
-import Taquin from '../Components/Games/Taquin';
-import Morpion from '../Components/Games/Morpion';
+import Taquin from '../Components/Games/GameTaquin/Taquin';
+import Morpion from '../Components/Games/GameMorpion/Morpion';
 
 
 //const Stack = createStackNavigator();

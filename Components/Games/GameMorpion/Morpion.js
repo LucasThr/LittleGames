@@ -72,6 +72,7 @@ winner(){
 
   refreshBoard = (Data) => {
     this.setState({ board: Data });
+
   }
 
   render() {
