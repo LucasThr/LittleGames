@@ -30,25 +30,7 @@ class HomeGames extends React.Component {
             </TouchableOpacity>
             </View>
           </View>
-          <View style={styles.block}>
-          <View style={styles.box_container}>
-            <TouchableOpacity style={styles.boxBurger}
-              onPress={() => this.props.navigation.navigate('FlappyBurger')}
-              >
-              <Image  style={styles.tinyLogo}
-              source={require('../assets/burger.png')} />
-              {/* <Text style={styles.titleGames}>Morpion</Text> */}
-      
-            </TouchableOpacity>
-            <TouchableOpacity style={styles.boxBurger}
-                onPress={() => this.props.navigation.navigate('FlappyBurger')}
-                >
-              <Image  style={styles.tinyLogo}
-              source={require('../assets/burger.png')} />
-              {/* <Text style={styles.titleGames}>Taquin</Text> */}
-            </TouchableOpacity>
-            </View>
-          </View>
+
 
       </View>
     )

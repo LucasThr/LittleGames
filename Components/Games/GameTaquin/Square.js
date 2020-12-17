@@ -3,7 +3,6 @@
 import React from 'react'
 import { StyleSheet,Text, TouchableOpacity, View, Image } from 'react-native'
 import { Ionicons } from '@expo/vector-icons';
-
 class Square extends React.Component {
 
     constructor(props) {
@@ -18,11 +17,26 @@ class Square extends React.Component {
 
       
       __displayNumber(id){
+        let arrayImage=[,require("../../../assets/taquin1.jpg")
+                        ,require("../../../assets/taquin2.jpg")
+                        ,require("../../../assets/taquin3.jpg")
+                        ,require("../../../assets/taquin4.jpg")
+                        ,require("../../../assets/taquin5.jpg")
+                        ,require("../../../assets/taquin6.jpg")
+                        ,require("../../../assets/taquin7.jpg")
+                        ,require("../../../assets/taquin8.jpg")
+                        ,require("../../../assets/taquin9.jpg")
+                        ,require("../../../assets/taquin10.jpg")
+                        ,require("../../../assets/taquin11.jpg")
+                      ]
           if(id==0){
               return(<Text style={styles.ButtonInside0}></Text>)
           }
           else{
-            return(<Text style={styles.ButtonInside}>{id}</Text>)
+            return(
+            <Image  style={styles.tinyLogo}
+            source={arrayImage[id]} />
+            )
         }
       }
 
@@ -79,26 +93,30 @@ class Square extends React.Component {
 const styles = StyleSheet.create({
 
   box: {
-    height:65,
-    width:65,
+    height:100,
+    width:100,
     borderWidth:1,
     
-
+  },
+  tinyLogo: {
+    width: 100,
+    height: 100,
   },
   ButtonInside: {
     textAlign: 'center',
     fontSize:45,
     color:'white',
     backgroundColor: 'red',
-    paddingBottom:3
+    paddingBottom:39
 
   },
   ButtonInside0: {
     textAlign: 'center',
+    alignItems:'center',
     fontSize:45,
     color:'white',
     backgroundColor: '#5d5757',
-    paddingBottom:3
+    paddingBottom:40
   },
 
 })

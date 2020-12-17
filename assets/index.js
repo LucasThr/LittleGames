@@ -1,0 +1,10 @@
+export const taquin1 = require('./taquin1.png');
+export const taquin1 = require('./taquin1.png');
+export const taquin1 = require('./taquin1.png');
+export const taquin1 = require('./taquin1.png');
+export const taquin1 = require('./taquin1.png');
+export const taquin1 = require('./taquin1.png');
+export const taquin1 = require('./taquin1.png');
+export const taquin1 = require('./taquin1.png');
+export const taquin1 = require('./taquin1.png');
+export const taquin1 = require('./taquin1.png');

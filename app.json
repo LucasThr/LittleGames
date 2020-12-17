@@ -21,9 +21,11 @@
     },
     "android": {
       "adaptiveIcon": {
-        "foregroundImage": "./assets/adaptive-icon.png",
+        "foregroundImage": "./assets/burger.png",
         "backgroundColor": "#FFFFFF"
-      }
+      },
+      "package": "fr.lucasthr.littlegameslt",
+      "versionCode": 1
     },
     "web": {
       "favicon": "./assets/favicon.png"

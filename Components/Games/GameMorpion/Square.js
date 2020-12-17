@@ -1,7 +1,7 @@
 // ../Components/Games.Sudoku.js
 
 import React from 'react'
-import { StyleSheet,Text, TouchableOpacity, View, Image } from 'react-native'
+import { Pressable,StyleSheet,Text, TouchableOpacity, View, Image } from 'react-native'
 import { Ionicons } from '@expo/vector-icons';
 
 class Square extends React.Component {
@@ -84,14 +84,12 @@ __styleBox(x,y){
 
   render() {
     return (
-        <TouchableOpacity 
+        <Pressable 
           style={this.__styleBox(this.props.x,this.props.y)}
           onPress={() => this.__actionButton(this.props.board)
-        }
-        >
-
+        }>
             {this.__displayButton()}
-        </TouchableOpacity>
+        </Pressable>
     )
   }
 }
