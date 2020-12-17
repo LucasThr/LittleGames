@@ -11,21 +11,44 @@ class HomeGames extends React.Component {
   render() {
     return (
       <View style={styles.main_container}>
-        <View style={styles.box_container}>
-          <TouchableOpacity style={styles.box}
-          onPress={() => this.props.navigation.navigate('Morpion')}
-          >
-            <Text style={styles.titleGames}>Morpion</Text>
-          </TouchableOpacity>
-          <TouchableOpacity style={styles.box}
-           onPress={() => this.props.navigation.navigate('Taquin')}
-           >
-            <Text style={styles.titleGames}>Taquin</Text>
-          </TouchableOpacity>
-          <TouchableOpacity style={styles.box}>
-            <Text style={styles.titleGames}>Flappy Bird</Text>
-          </TouchableOpacity>
-        </View>
+        <View style={styles.block}>
+          <View style={styles.box_container}>
+            <TouchableOpacity style={styles.boxMorpion}
+              onPress={() => this.props.navigation.navigate('Morpion')}
+              >
+              <Image  style={styles.tinyLogo}
+              source={require('../assets/morpion.png')} />
+              {/* <Text style={styles.titleGames}>Morpion</Text> */}
+      
+            </TouchableOpacity>
+            <TouchableOpacity style={styles.boxTaquin}
+                onPress={() => this.props.navigation.navigate('Taquin')}
+                >
+              <Image  style={styles.tinyLogo}
+              source={require('../assets/taquin.png')} />
+              {/* <Text style={styles.titleGames}>Taquin</Text> */}
+            </TouchableOpacity>
+            </View>
+          </View>
+          <View style={styles.block}>
+          <View style={styles.box_container}>
+            <TouchableOpacity style={styles.boxBurger}
+              onPress={() => this.props.navigation.navigate('FlappyBurger')}
+              >
+              <Image  style={styles.tinyLogo}
+              source={require('../assets/burger.png')} />
+              {/* <Text style={styles.titleGames}>Morpion</Text> */}
+      
+            </TouchableOpacity>
+            <TouchableOpacity style={styles.boxBurger}
+                onPress={() => this.props.navigation.navigate('FlappyBurger')}
+                >
+              <Image  style={styles.tinyLogo}
+              source={require('../assets/burger.png')} />
+              {/* <Text style={styles.titleGames}>Taquin</Text> */}
+            </TouchableOpacity>
+            </View>
+          </View>
 
       </View>
     )
@@ -34,19 +57,62 @@ class HomeGames extends React.Component {
 
 const styles = StyleSheet.create({
   main_container: {
-    flex: 1
+    flex: 1,
+    backgroundColor:'#505050',
+
+  },
+  block:{
+    height:180,
   },
   box_container: {
-    flex: 1,
-  },
-  box: {
     flex:1,
-    backgroundColor:'skyblue',
+    flexDirection:'row',
+  },
+  tinyLogo: {
+    width: 100,
+    height: 100,
+  },
+  boxMorpion: {
+    flex:1,
+    backgroundColor:'#06e79f',
     flexDirection:'row',
     margin:15,
     borderRadius:20,
-    justifyContent: 'center',
-    alignItems:'center'
+    borderWidth:3,
+    alignItems:'center',
+    justifyContent:'center',
+    shadowOpacity: 0.75,
+    shadowRadius: 5,
+    shadowColor: 'black',
+    shadowOffset: { height: 2, width: 0 },
+  },
+  boxTaquin: {
+    flex:1,
+    backgroundColor:'#06c1e7',
+    flexDirection:'row',
+    margin:15,
+    borderRadius:20,
+    borderWidth:3,
+    alignItems:'center',
+    justifyContent:'center',
+    shadowOpacity: 0.75,
+    shadowRadius: 5,
+    shadowColor: 'black',
+    shadowOffset: { height: 2, width: 0 },
+  },
+  boxBurger: {
+    flex:1,
+    backgroundColor:'#e70688',
+    flexDirection:'row',
+    margin:15,
+    borderRadius:20,
+    borderWidth:3,
+    alignItems:'center',
+    justifyContent:'center',
+    shadowOpacity: 0.75,
+    shadowRadius: 5,
+    shadowColor: 'black',
+    shadowOffset: { height: 2, width: 0 },
   },
   titleGames: {
     fontSize:45,

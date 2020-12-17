@@ -3,9 +3,8 @@
 // Navigation/Navigation.js
 import React from 'react'
 import 'react-native-gesture-handler';
-import { NavigationContainer } from '@react-navigation/native';
+import { NavigationContainer,DefaultTheme } from '@react-navigation/native';
 import { createStackNavigator } from '@react-navigation/stack';
-import { StyleSheet, Image } from 'react-native';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import { Ionicons } from '@expo/vector-icons';
 import HomeGames from '../Components/HomeGames';
@@ -18,9 +17,10 @@ import Morpion from '../Components/Games/GameMorpion/Morpion';
 const Tab = createBottomTabNavigator();
 const Stack = createStackNavigator();
 
+
 function StackHome() {
   return(
-    <Stack.Navigator initialRouteName="HomeGames">
+    <Stack.Navigator initialRouteName="HomeGames" >
       <Stack.Screen name="HomeGames" component={HomeGames} />
       <Stack.Screen name="Taquin" component={Taquin} />
       <Stack.Screen name="Morpion" component={Morpion} />
@@ -58,11 +58,13 @@ class Navigation extends React.Component{
             return <Ionicons name={iconName} size={size} color={color} />;
           },
         })}
+        
         tabBarOptions={{
-          activeTintColor: 'green',
-          inactiveTintColor: 'gray',
-          activeBackgroundColor: '#DDDDDD', // Couleur d'arrière-plan de l'onglet sélectionné
-          inactiveBackgroundColor: '#FFFFFF', // Couleur d'arrière-plan des onglets non sélectionnés
+          tabStyle: { borderTopWidth: 0 }, style: { borderTopWidth: 0} ,
+          activeTintColor: 'white',
+          inactiveTintColor: '#bebebe',
+          activeBackgroundColor: '#3d3d3d', // Couleur d'arrière-plan de l'onglet sélectionné
+          inactiveBackgroundColor: '#5d5d5d', // Couleur d'arrière-plan des onglets non sélectionnés
         }}>
           <Tab.Screen name="Home" component={StackHome} />
           <Tab.Screen name="Settings" component={StackSettings} />
@@ -84,11 +86,6 @@ class Navigation extends React.Component{
 //   }
 }
 
-// const styles = StyleSheet.create({
-//   icon: {
-//     width: 30,
-//     height: 30
-//   }
-// })
+
 
 export default Navigation

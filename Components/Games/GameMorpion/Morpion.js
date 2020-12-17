@@ -1,7 +1,7 @@
 // ../Components/Games.Sudoku.js
 
 import React from 'react'
-import { StyleSheet,Text, TouchableOpacity, View, Image, Alert } from 'react-native'
+import { StyleSheet,Text, Modal, TouchableHighlight, View, Image, Alert } from 'react-native'
 import Square from './Square.js'
 
 
@@ -11,11 +11,15 @@ class Morpion extends React.Component {
     this.state = {
         turn: false,
         board: [[null,null,null],[null,null,null],[null,null,null]],
-        countTurn: 0
+        countTurn: 0,
+        modalVisible: false,
+        winner: null
     }
   }
 
-
+  setModalVisible = (visible) => {
+    this.setState({ modalVisible: visible});
+  }
 
 
 winner(){
@@ -62,13 +66,29 @@ winner(){
     if(!win){
     this.setState(state => ({ turn: !state.turn, countTurn: state.countTurn+1 }));
     if(this.state.countTurn==8){
-      alert('Egalité')
+      this.setState({ winner: false})
+      this.setModalVisible(true);
     }
     }else{
-      this.state.turn ? alert("O a gagné") : alert("X a gagné");
+      this.state.turn ? this.setState({ winner: 'O'}) :   this.setState({ winner: 'X'});
+    
+      this.setModalVisible(true);
+      
     }
 
-  };
+  }
+
+  __displayWinner(){
+    if(!this.state.winner){
+      return(
+        <Text style={styles.modalText}> Egalité !</Text>
+      )
+    }else{
+      return(
+      <Text style={styles.modalText}> {this.state.winner} a gagné !</Text>
+      )
+    }
+  }
 
   refreshBoard = (Data) => {
     this.setState({ board: Data });
@@ -76,8 +96,32 @@ winner(){
   }
 
   render() {
+    const { modalVisible } = this.state;
     return (
-      <View>
+      <View style={styles.main}>
+          <Modal
+          animationType="slide"
+          transparent={true}
+          visible={modalVisible}
+          onRequestClose={() => {
+            Alert.alert("Modal has been closed.");
+          }}
+        >
+          <View style={styles.centeredView}>
+            <View style={styles.modalView}>
+              {this.__displayWinner()}
+
+              <TouchableHighlight
+                style={{ ...styles.openButton, backgroundColor: "#2196F3" }}
+                onPress={() => {
+                  this.setModalVisible(!modalVisible);
+                }}
+              >
+                <Text style={styles.textStyle}>Fermer ici</Text>
+              </TouchableHighlight>
+            </View>
+          </View>
+        </Modal>
       <View style={styles.main_container}>
         <View style={styles.box_container}>
           <Square  turn={this.toggleTurn} player={this.state.turn} board={this.state.board} boardReview={this.refreshBoard} x='0' y='0'/>
@@ -96,30 +140,62 @@ winner(){
         </View>
         
       </View>
-      <Text style={styles.text}>Turn to : {this.state.turn ? 'O' : 'X'}</Text>
+      <Text style={styles.text}>Au tour de : {this.state.turn ? 'O' : 'X'}</Text>
       </View>
     )
   }
 }
 
 const styles = StyleSheet.create({
+  main:{
+    flex:1,
+    backgroundColor:'#505050'
+  },
   main_container: {
     marginTop:60,
     alignItems: 'center',
     justifyContent: 'center',
-    flexDirection: 'row'
+    flexDirection: 'row',
   },
   box_container: {
   },
-  box: {
-    margin:15,
-    borderRadius:20,
-    height:100,
-    width:100,
-    borderWidth:1,
-    textAlign:'center',
-    justifyContent:'center'
-
+  modalView: {
+    margin: 20,
+    backgroundColor: "white",
+    borderRadius: 20,
+    padding: 35,
+    alignItems: "center",
+    shadowColor: "#000",
+    shadowOffset: {
+      width: 0,
+      height: 2
+    },
+    shadowOpacity: 0.25,
+    shadowRadius: 3.84,
+    elevation: 5
+  },
+  openButton: {
+    backgroundColor: "#F194FF",
+    borderRadius: 20,
+    paddingVertical: 15,
+    paddingHorizontal:80,
+    elevation: 2
+  },
+  centeredView: {
+    flex: 1,
+    justifyContent: "center",
+    alignItems: "center",
+    marginTop: 2
+  },
+  textStyle: {
+    color: "white",
+    fontWeight: "bold",
+    textAlign: "center",
+  },
+  modalText: {
+    marginBottom: 15,
+    textAlign: "center",
+    fontSize:50
   },
   ButtonInside: {
     textAlign: 'center',
@@ -127,9 +203,10 @@ const styles = StyleSheet.create({
     color:'blue'
   },
   text: {
-    fontSize: 30,
+    fontSize: 40,
     textAlign:'center',
-    marginTop:19
+    marginTop:60,
+    color:'white'
   }
 })
 
