@@ -2,100 +2,116 @@
 
 import React from 'react'
 import { StyleSheet,Text,Button, ImageBackground,TouchableWithoutFeedback, TouchableOpacity, View, Image } from 'react-native'
+import { set } from 'react-native-reanimated';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
-class TouchButton extends React.Component {
-  constructor(props){
-    super(props)
-    this.state = {
-      left: 158,
-      top:150,
-      counter:0,
-      time:10,
-      timer:'10',
-      isOn:false
-    }
-  }
+const TouchButton = (props) => {
 
-   __storeData = async (value) => {
-    try {
-      await AsyncStorage.setItem('BestScoreTouchBall', value)
-    } catch (e) {
-      // saving error
-    }
-  }
+  const [left, setLeft] = React.useState(158);
+  const [top, setTop] = React.useState(150);
+  const [counter, setCounter] = React.useState(0);
+  const [time, setTime] = React.useState(10);
+  const [seconds, setSeconds] = React.useState(0);
+  const [timer, setTimer] = React.useState('10');
+  const [isOn, setIsOn] = React.useState(false);
+  const [bestScore, setBestScore] = React.useState('0');
+  const [newScore, setNewScore] = React.useState(0);
 
-  __getData = async () => {
+  const [isFinish, setIsFinish] = React.useState(false);
+  var chrono;
+
+  const getData = async () => {
     try {
-      const value = await AsyncStorage.getItem('BestScoreTouchBall')
-      console.log(value)
+      const value = await AsyncStorage.getItem('Record')
       if(value !== null) {
-        this.setState({ bestScore: 0 })
-      }else{
-        this.setState({ bestScore: 0 })
+        setBestScore(value)
       }
     } catch(e) {
-      console.log('Error')
+      // error reading value
     }
   }
-  
-  
-  incrementCounter = () => {
-    const { time } = this.state;
-    if(time==0){
-      this.setState({ isOn:false })
-    }else{
-      this.setState({ time: time - 1 });
-      if(time>10){
-        var newTime = 2
-        this.setState({ timer: this.state.time });
+
+  React.useEffect(() => {
+    getData()
+  }, [])
+
+React.useEffect(() => {
+
+  if(isOn) {
+    chrono =  setInterval(  ()  => {
+
+      if(time==0){
+        setIsOn(false)
+        setIsFinish(true)
       }else{
-        this.setState({ timer: '0' + this.state.time });
+        setTime(time - 1)
+        console.log(time)
       }
-      
-      
+    },1000)
+   
+    
+    return () => {
+      clearInterval(chrono)
+    }
   }
-  };
+ } ,[time])
 
-  startTimer = () => {
+ const storeData = async (value) => {
+  try {
+    console.log(value)
+    await AsyncStorage.setItem('Record', value)
+  } catch (e) {
+    console.log('error catch')
+  }
+}
+
+ React.useEffect(() => {
+  if(bestScore<counter) {
+    setBestScore(counter)
+    setNewScore(counter + 1)
+    storeData("" + newScore)
+  }
+ } ,[counter])
+
+  const startTimer = () => {
     var RandomNumberTop = Math.floor(Math.random() * 474) + 1 ;
     var RandomNumberLeft = Math.floor(Math.random() * 310) + 1 ;
-    var count = this.state.counter + 1
-    this.setState({
-      counter:count,top:RandomNumberTop,left:RandomNumberLeft
-    })
-      this.timer = setInterval(this.incrementCounter, 1000)
+    setCounter(counter + 1)
+    setTop(RandomNumberTop)
+    setLeft(RandomNumberLeft)
+    //chrono = setInterval(incrementCounter, 1000)
   }
 
-  modifyButton = () => {
+  const modifyButton = () => {
     var RandomNumberTop = Math.floor(Math.random() * 474) + 1 ;
     var RandomNumberLeft = Math.floor(Math.random() * 310) + 1 ;
-    if(!this.state.isOn){
-      this.setState({
-        isOn: true
-      })
-      this.startTimer()
+    if(!isOn){
+      console.log('start')
+      setIsOn(true)
+      setTime(time - 1)
+      startTimer()
     } 
-    if(this.state.isOn){
-      var count = this.state.counter + 1
-      this.setState({top:RandomNumberTop,left:RandomNumberLeft, counter:count})
+    if(isOn){
+    setCounter(counter + 1)
+    setTop(RandomNumberTop)
+    setLeft(RandomNumberLeft)
     }
   }
 
-  stopGame = () => {
-    clearInterval(this.timer)
-    var BestRecord = this.__getData()
-    if(BestRecord < this.state.counter){
-    this.__storeData(this.state.counter)
-    }
-    this.setState({isOn:false,time:10,counter:0, left: 158, top:150,timer:'10'})
+  const restartGame = () => {
+    setIsOn(false)
+    setTime(10)
+    setCounter(0)
+    setLeft(158)
+    setTop(150)
+    setTimer('10')
+    setIsFinish(false)
   }
 
-  TouchableOpacity = () => {
-    // var BestRecord = this.__getData()
-    // console.log(BestRecord)
-    if(this.state.time != 0){
-      // this.__storeData('5')
+  const TouchableOpacityRender = () => {
+    
+    if(!isFinish){
+     
     return(
       <TouchableOpacity style={{  
 
@@ -103,25 +119,26 @@ class TouchButton extends React.Component {
         elevation:20,
         height:100,
         borderRadius:50,
-        top:this.state.top,
-        left:this.state.left,
+        top:top,
+        left:left,
         alignItems:'center',
         justifyContent:'center'
       }}
-        onPress = {() => this.modifyButton()}>
+        onPress = {() => modifyButton()}>
         <Image
         style={{width:225,height:225,shadowColor:'black',shadowOpacity:1,shadowRadius:20,shadowOffset: { height: 2, width: 2 }}}
         source={require('../../../assets/balle.png')}/>
       </TouchableOpacity>
     )
   }else{
+    
     return(
       <View>
       <Text style={{textAlign:'center', textAlignVertical:'center',top:130,fontSize:40}}>
         Your Score : 
       </Text>
       <Text style={{textAlign:'center', textAlignVertical:'center',top:138,fontSize:100}}>
-        {this.state.counter}
+        {counter}
       </Text>
       <TouchableOpacity 
        style={{
@@ -134,7 +151,7 @@ class TouchButton extends React.Component {
         height:60
       }}
         onPress={() => 
-        this.stopGame()
+        restartGame()
         }>
         <Text  style={{
           textAlign:'center',
@@ -149,32 +166,39 @@ class TouchButton extends React.Component {
   }
   }
 
-  render() {
- 
     return (
+      
       <View style={styles.main_container}>
         <View style={{backgroundColor:'#242424'}}>
-        <Text style={styles.score}>
-            {this.state.counter}
+          <View style={styles.headerScore}>
+            <Text style={styles.score}>
+               Record : {bestScore}
+            </Text>
+            <Text style={styles.score}>
+                Time : {time} 
+            </Text>
+          </View>
+        <Text style={styles.counter}>
+            {counter}
         </Text>
-        <Text style={styles.score}>
-        
-        </Text>
-        <Text style={styles.timer}>
-            00:{this.state.timer}
-        </Text>
+   
         </View>
         <ImageBackground source={require('../../../assets/greenfond.webp')} style={styles.image}>
-          {this.TouchableOpacity()}
-          </ImageBackground>
+          <TouchableOpacityRender/>
+        </ImageBackground>
       </View>
     )
   }
-}
+
 
 const styles = StyleSheet.create({
     main_container: {
       flex: 1
+    },
+    headerScore:{
+      flexDirection:'row',
+      marginTop:10,
+      justifyContent:'space-around'
     },
     button:{
       width:100,
@@ -188,22 +212,24 @@ const styles = StyleSheet.create({
     game:{
       flex:1
     },
-    score:{
-      height:65,
-      top:0,
+    counter:{
+      height:80,
       textAlign:'center',
       fontSize:60,
       color:'white',
-      fontWeight:'bold'
+      fontWeight:'bold',
+      borderBottomWidth:1
   
     },
-    timer:{
-      height:65,
-      top:0,
-      textAlign:'center',
-      fontSize:40,
-      color:'#d33535',
-      borderBottomWidth:1
+    textScore:{
+
+    },
+    score:{
+      justifyContent:'center',
+      alignItems:'center',
+      alignContent:'center',
+      fontSize:20,
+      color:'#b2babb',
     
     },
     image:{
@@ -212,4 +238,4 @@ const styles = StyleSheet.create({
   })
   
 
-export default TouchButton
+  export default TouchButton;

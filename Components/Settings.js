@@ -1,33 +1,66 @@
 // ../Components/Settings.js
 
-import React from 'react'
-import { StyleSheet,Text, View, Image, ImageBackground } from 'react-native'
 
+import React from 'react';
+import {StyleSheet, Text, View, Button} from 'react-native';
 
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
-class Settings extends React.Component {
-  render() {
-    return (
-      <View style={styles.main_container}>
-        <ImageBackground source={require('../assets/greenfond.webp')} style={styles.image}>
-         
-        </ImageBackground>
-      </View>
-    )
-  }
+export default function GetSet() {
+  const [storedNumber, setStoredNumber] = React.useState('');
+  const [needsRestart, setNeedsRestart] = React.useState(false);
+
+  React.useEffect(() => {
+    console.log('test')
+    AsyncStorage.getItem(STORAGE_KEY).then((value) => {
+      console.log('test')
+      if (value) {
+        setStoredNumber(value);
+      }
+    });
+  }, []);
+
+  const increaseByTen = React.useCallback(async () => {
+    const newNumber = +storedNumber > 0 ? +storedNumber + 10 : 10;
+
+    await AsyncStorage.setItem(STORAGE_KEY, `${newNumber}`);
+
+    setStoredNumber(`${newNumber}`);
+    setNeedsRestart(true);
+  }, [setNeedsRestart, setStoredNumber, storedNumber]);
+
+  const clearItem = React.useCallback(async () => {
+    await AsyncStorage.removeItem(STORAGE_KEY);
+    setNeedsRestart(true);
+  }, [setNeedsRestart]);
+
+  return (
+    <View>
+      <Text style={styles.text}>Currently stored: </Text>
+      <Text testID="storedNumber_text" style={styles.text}>
+        {storedNumber}
+      </Text>
+
+      <Button
+        testID="increaseByTen_button"
+        title="Increase by 10"
+        onPress={increaseByTen}
+      />
+
+      <Button testID="clear_button" title="Clear item" onPress={clearItem} />
+
+      {needsRestart ? <Text>Hit restart to see effect</Text> : null}
+    </View>
+  );
 }
 
 const styles = StyleSheet.create({
-    main_container: {
-      flex: 1,
-    },
-    image:{
-      height:500,
-      resizeMode:"contain",
-      justifyContent:'center',
+  text: {
+    color: '#000000',
+    fontSize: 20,
+    textAlign: 'center',
+    margin: 10,
+  },
+});
 
-    }
-  })
-  
-
-export default Settings
+export const STORAGE_KEY = 'random';

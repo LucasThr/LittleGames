@@ -131,8 +131,8 @@ class Navigation extends React.Component{
         drawerType='back'
         drawerContent={props => <DrawerContent {...props} />}>
         <Drawer.Screen name="Home" component={StackHome} />
-        {/* <Drawer.Screen name="Chat" component={StackChat} />
-        <Drawer.Screen  name="Settings" component={StackSettings} /> */}
+        {/* <Drawer.Screen name="Chat" component={StackChat} /> */}
+        <Drawer.Screen  name="Settings" component={StackSettings} />
       </Drawer.Navigator>
 
         {/* <Tab.Navigator 
