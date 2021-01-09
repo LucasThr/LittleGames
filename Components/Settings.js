@@ -1,7 +1,7 @@
 // ../Components/Settings.js
 
 import React from 'react'
-import { StyleSheet,Text, View, Image } from 'react-native'
+import { StyleSheet,Text, View, Image, ImageBackground } from 'react-native'
 
 
 
@@ -9,7 +9,9 @@ class Settings extends React.Component {
   render() {
     return (
       <View style={styles.main_container}>
-
+        <ImageBackground source={require('../assets/greenfond.webp')} style={styles.image}>
+         
+        </ImageBackground>
       </View>
     )
   }
@@ -17,7 +19,13 @@ class Settings extends React.Component {
 
 const styles = StyleSheet.create({
     main_container: {
-      flex: 1
+      flex: 1,
+    },
+    image:{
+      height:500,
+      resizeMode:"contain",
+      justifyContent:'center',
+
     }
   })
   

@@ -2,9 +2,9 @@
   "expo": {
     "name": "LittleGames",
     "slug": "LittleGames",
-    "version": "1.0.0",
+    "version": "1.0.3",
     "orientation": "portrait",
-    "icon": "./assets/icon.png",
+    "icon": "./assets/icone.png",
     "splash": {
       "image": "./assets/splash.png",
       "resizeMode": "contain",
@@ -21,11 +21,11 @@
     },
     "android": {
       "adaptiveIcon": {
-        "foregroundImage": "./assets/burger.png",
+        "foregroundImage": "./assets/icone.png",
         "backgroundColor": "#FFFFFF"
       },
       "package": "fr.lucasthr.littlegameslt",
-      "versionCode": 1
+      "versionCode": 5
     },
     "web": {
       "favicon": "./assets/favicon.png"

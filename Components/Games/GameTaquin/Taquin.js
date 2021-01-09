@@ -17,7 +17,8 @@ class Taquin extends React.Component {
       boardResult: [
         1,2,3,4,5,6,7,8,9,10,11,0
       ],
-      modalVisible: false
+      modalVisible: false,
+      counter:'00'
     }
   }
 
@@ -58,6 +59,11 @@ class Taquin extends React.Component {
     return (
       
       <View style={styles.container}>
+        <View style={styles.viewScore}>
+          <Text style={styles.score}>
+            {this.state.counter}
+          </Text>
+        </View>
        <Modal
           animationType="slide"
           transparent={true}
@@ -123,6 +129,21 @@ const styles = StyleSheet.create({
     justifyContent:'center',
     backgroundColor:'#505050'
     
+  },
+  viewScore:{
+    top:50,
+    textAlign:'center',
+    alignItems:'center',
+    justifyContent:'center',
+    fontSize:30,
+    color:'white',
+    fontWeight:'bold'
+
+  },
+  score:{
+    textAlign:'center',
+    fontSize:50,
+    color:'white',
   },
   modalView: {
     margin: 20,
