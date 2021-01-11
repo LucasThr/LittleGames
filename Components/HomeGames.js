@@ -46,23 +46,23 @@ class HomeGames extends React.Component {
             </TouchableOpacity>
             </ScrollView>
           </View>
-          <Text style={styles.title}>A venir </Text>
+          <Text style={styles.title}>Casino </Text>
           <View>
             <ScrollView
             horizontal={true}
             showsHorizontalScrollIndicator={false}>
             <TouchableOpacity style={styles.boxTouchButton}
-              onPress={() => this.props.navigation.navigate('TouchBall')}
+              onPress={() => this.props.navigation.navigate('SlotMachine')}
               >
-              <Image  style={styles.tinyLogo}
-              source={require('../assets/favicon.png')} />
+              <Image  style={{height:60,width:140}}
+              source={require('../assets/slotsmachine.png')} />
               <Text  style={styles.titleGames}>
-                Test
+                Slots
               </Text>
             </TouchableOpacity>
 
             <TouchableOpacity style={styles.boxTaquin}
-                onPress={() => this.props.navigation.navigate('Taquin')}
+               // onPress={() => this.props.navigation.navigate('Taquin')}
                 >
               <Image  style={styles.tinyLogo}
               source={require('../assets/favicon.png')} />
@@ -70,7 +70,7 @@ class HomeGames extends React.Component {
             </TouchableOpacity>
 
             <TouchableOpacity style={styles.boxMorpion}
-              onPress={() => this.props.navigation.navigate('Morpion')}
+            //  onPress={() => this.props.navigation.navigate('Morpion')}
               >
               <Image  style={styles.tinyLogo}
               source={require('../assets/favicon.png')} />

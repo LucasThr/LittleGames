@@ -61,7 +61,7 @@ class Taquin extends React.Component {
       <View style={styles.container}>
         <View style={styles.viewScore}>
           <Text style={styles.score}>
-            {this.state.counter}
+            {/* {this.state.counter} */}
           </Text>
         </View>
        <Modal

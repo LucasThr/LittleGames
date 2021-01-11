@@ -1,7 +1,7 @@
 // ../Components/Games/TouchButton.js
 
 import React from 'react'
-import { StyleSheet,Text,Button, ImageBackground,TouchableWithoutFeedback, TouchableOpacity, View, Image } from 'react-native'
+import { StyleSheet,Text,Button, ImageBackground,Pressable, TouchableOpacity, View, Image } from 'react-native'
 import { set } from 'react-native-reanimated';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
@@ -22,7 +22,7 @@ const TouchButton = (props) => {
 
   const getData = async () => {
     try {
-      const value = await AsyncStorage.getItem('Record')
+      const value = await AsyncStorage.getItem('RecordTouchButton')
       if(value !== null) {
         setBestScore(value)
       }
@@ -59,7 +59,7 @@ React.useEffect(() => {
  const storeData = async (value) => {
   try {
     console.log(value)
-    await AsyncStorage.setItem('Record', value)
+    await AsyncStorage.setItem('RecordTouchButton', value)
   } catch (e) {
     console.log('error catch')
   }
@@ -113,7 +113,8 @@ React.useEffect(() => {
     if(!isFinish){
      
     return(
-      <TouchableOpacity style={{  
+      <Pressable 
+      style={{  
 
         width:100,
         elevation:20,
@@ -124,11 +125,11 @@ React.useEffect(() => {
         alignItems:'center',
         justifyContent:'center'
       }}
-        onPress = {() => modifyButton()}>
+        onPressIn = {() => modifyButton()}>
         <Image
         style={{width:225,height:225,shadowColor:'black',shadowOpacity:1,shadowRadius:20,shadowOffset: { height: 2, width: 2 }}}
         source={require('../../../assets/balle.png')}/>
-      </TouchableOpacity>
+      </Pressable>
     )
   }else{
     

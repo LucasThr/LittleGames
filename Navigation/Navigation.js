@@ -15,9 +15,11 @@ import Taquin from '../Components/Games/GameTaquin/Taquin';
 import Morpion from '../Components/Games/GameMorpion/Morpion';
 import FlappyBird from '../Components/Games/FlappyBird/Main';
 import TouchButton from '../Components/Games/TouchButton/TouchButton';
+import SlotMachine from '../Components/Games/Casino/SlotMachine';
 import Chat from '../Components/Chat/Chat';
 import { createDrawerNavigator } from '@react-navigation/drawer';
 import { DrawerContent } from './DrawerContent';
+import SlotsMachine from '../Components/Games/Casino/SlotMachine';
 
 
 //const Stack = createStackNavigator();
@@ -62,6 +64,12 @@ function StackHome({ navigation }) {
           backgroundColor: '#403f3f',
         }}} />
       <Stack.Screen name="TouchBall" component={TouchButton}
+       options={{
+        headerTintColor: '#c4c4c4',
+        headerStyle: {
+          backgroundColor: '#403f3f',
+        }}} />
+      <Stack.Screen name="SlotMachine" component={SlotMachine}
        options={{
         headerTintColor: '#c4c4c4',
         headerStyle: {
@@ -132,7 +140,7 @@ class Navigation extends React.Component{
         drawerContent={props => <DrawerContent {...props} />}>
         <Drawer.Screen name="Home" component={StackHome} />
         {/* <Drawer.Screen name="Chat" component={StackChat} /> */}
-        <Drawer.Screen  name="Settings" component={StackSettings} />
+        {/* <Drawer.Screen  name="Settings" component={StackSettings} /> */}
       </Drawer.Navigator>
 
         {/* <Tab.Navigator 
