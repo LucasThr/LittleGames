@@ -52,6 +52,8 @@ const BlackJack = (props) => {
   const [isStart, setIsStart] = useState(false);
   const [mise, setMise] = useState(0);
   const [winnerText, setWinnerText] = useState("");
+  const [coins, setCoins] = useState(50);
+
 
 
 
@@ -63,7 +65,8 @@ const BlackJack = (props) => {
       } 
       if(cardPlayer==21 && gameState<3){
         setTimeout(function(){  
-          setWinnerText('BlackJack')
+          setWinnerText('BlackJack');
+          setCoins(coins => coins + mise*4)
         },500)
       }
     },[cardPlayer])
@@ -135,16 +138,22 @@ const BlackJack = (props) => {
     const checkResult = (newTotalBank) => {
         if(newTotalBank>21){
         setTimeout(function(){        
-          setWinnerText('Gagné')
+          setWinnerText('Gagné');
+          setCoins(coins => coins + mise*2)
         },1200) 
         }else if(newTotalBank==cardPlayer){
           setTimeout(function(){        
-            setWinnerText('Egalité')
+            setWinnerText('Egalité');
           },1200) 
         }else if(newTotalBank>cardPlayer){
           setTimeout(function(){        
-            setWinnerText('Perdu')
+            setWinnerText('Perdu');
           },1200) 
+        }else if(newTotalBank<cardPlayer){
+            setTimeout(function(){        
+              setWinnerText('Gagné');
+              setCoins(coins => coins + mise*2)
+          },1200)  
         }else{
           console.log(newTotalBank)
           console.log(cardPlayer)
@@ -159,7 +168,11 @@ const BlackJack = (props) => {
 
 
     const settingMise = (add) => {
-      setMise(mise + add)
+      if(add==0){
+        setMise(0)
+      }else{
+        setMise(mise + add)
+      }
     }
  
    
@@ -210,7 +223,8 @@ const BlackJack = (props) => {
     }
 
     const startGame = () => {
-      setIsStart(1)
+      setIsStart(true)
+      setCoins(coins => coins - mise)
       setGameState(1)
       let a = changeCard1() //Affiche la premiere carte du joueur
       let b= changeCard2(a) //Afficher la premiere carte du croupier
@@ -218,9 +232,6 @@ const BlackJack = (props) => {
       let totalValue= arrayValueCard[0][a] + arrayValueCard[0][c];
       setCardPlayer(totalValue)
       setCardBank(arrayValueCard[0][b])
-      if(totalValue==21){
-        alert('BlackJack')
-      }
     }
 
     const restart = () => {
@@ -248,10 +259,7 @@ const BlackJack = (props) => {
         <View style={{flex:1,backgroundColor:'#242424'}}>
           <View style={styles.headerScore}>
             <Text style={styles.score}>
-               Coins : 
-            </Text>
-            <Text style={styles.score}>
-                score : 
+               Coins : {coins}
             </Text>
             <Text style={styles.score}>
                 Mise : {mise}
@@ -260,15 +268,26 @@ const BlackJack = (props) => {
           <View style={styles.viewMachine}>
    
             <View style={{flex:1,flexDirection:'row',marginTop:20}}>
+              {cardBank1 != 0 ?
                 <View style={styles.card}>
                     <Text style={styles.cardInside}>{cardBank1 == 0 ? "?" : arrayCard[0][cardBank1]}</Text>
+                    <Text style={styles.cardInsideBottom}>{cardBank1 == 0 ? "?" : arrayCard[0][cardBank1]}</Text>
                 </View>
+                :
+                <View></View>
+              }
+                {cardBank2 != 0 ?
                 <View style={styles.card}>
                     <Text style={styles.cardInside}>{cardBank2 == 0 ? "?" : arrayCard[0][cardBank2]}</Text>
+                    <Text style={styles.cardInsideBottom}>{cardBank2 == 0 ? "?" : arrayCard[0][cardBank2]}</Text>
                 </View>     
+                :
+                <View></View>
+              }
                 {cardBank3 != 0 ?
                   <View style={styles.card}>
                       <Text style={styles.cardInside}>{cardBank3 == 0 ? "?" : arrayCard[0][cardBank3]}</Text>
+                      <Text style={styles.cardInsideBottom}>{cardBank3 == 0 ? "?" : arrayCard[0][cardBank3]}</Text>
                   </View>
                   :
                   <View></View>
@@ -276,6 +295,7 @@ const BlackJack = (props) => {
                 {cardBank4 != 0 ?
                   <View style={styles.card}>
                       <Text style={styles.cardInside}>{cardBank4 == 0 ? "?" : arrayCard[0][cardBank4]}</Text>
+                      <Text style={styles.cardInsideBottom}>{cardBank4 == 0 ? "?" : arrayCard[0][cardBank4]}</Text>
                   </View>
                   :
                   <View></View>
@@ -283,6 +303,7 @@ const BlackJack = (props) => {
                 {cardBank5 != 0 ?
                   <View style={styles.card}>
                       <Text style={styles.cardInside}>{cardBank5 == 0 ? "?" : arrayCard[0][cardBank5]}</Text>
+                      <Text style={styles.cardInsideBottom}>{cardBank5 == 0 ? "?" : arrayCard[0][cardBank5]}</Text>
                   </View>
                   :
                   <View></View>
@@ -295,21 +316,33 @@ const BlackJack = (props) => {
               {winnerText != "" ?
               <Pressable style={{backgroundColor:'teal',borderRadius:10,padding:20, color:'pink',top:50,zIndex:20}}
               onPress={() => restart()}>
-              <Text style={{fontSize:30}}>Réessayer</Text>
+              <Text style={{fontSize:30,color:'white'}}>Rejouer</Text>
               </Pressable>
               : <View></View>}
             </View>
             <View style={{flex:2,flexDirection:'row'}}>
 
-              <View style={styles.card}>
-                  <Text style={styles.cardInside}>{card3 == 0 ? "?" : arrayCard[0][card3]}</Text>  
-              </View>
-              <View style={styles.cardLeft}>
-                  <Text style={styles.cardInside}>{card4 == 0 ? "?" : arrayCard[0][card4]}</Text>
-              </View>
+            {card3 != 0 ?
+                <View style={styles.card}>
+                    <Text style={styles.cardInside}>{card3 == 0 ? "?" : arrayCard[0][card3]}</Text>
+                    <Text style={styles.cardInsideBottom}>{card3 == 0 ? "?" : arrayCard[0][card3]}</Text>
+                </View>
+                :
+                <View></View>
+            }
+            {card4 != 0 ?
+                <View style={styles.cardLeft}>
+                    <Text style={styles.cardInside}>{card4 == 0 ? "?" : arrayCard[0][card4]}</Text>
+                    <Text style={styles.cardInsideBottom}>{card4 == 0 ? "?" : arrayCard[0][card4]}</Text>
+
+                </View>
+                :
+                <View></View>
+            }
             {card5 != 0 ?
                 <View style={styles.cardLeft5}>
                     <Text style={styles.cardInside}>{card5 == 0 ? "?" : arrayCard[0][card5]}</Text>
+                    <Text style={styles.cardInsideBottom}>{card5 == 0 ? "?" : arrayCard[0][card5]}</Text>
                 </View>
                 :
                 <View></View>
@@ -317,6 +350,7 @@ const BlackJack = (props) => {
             {card6 != 0 ?
                 <View style={styles.cardLeft6}>
                     <Text style={styles.cardInside}>{card6 == 0 ? "?" : arrayCard[0][card6]}</Text>
+                    <Text style={styles.cardInsideBottom}>{card6 == 0 ? "?" : arrayCard[0][card6]}</Text>
                 </View>
                 :
                 <View></View>
@@ -324,6 +358,7 @@ const BlackJack = (props) => {
             {card7 != 0 ?
                 <View style={styles.cardLeft7}>
                     <Text style={styles.cardInside}>{card7 == 0 ? "?" : arrayCard[0][card7]}</Text>
+                    <Text style={styles.cardInsideBottom}>{card7 == 0 ? "?" : arrayCard[0][card7]}</Text>
                 </View>
                 :
                 <View></View>
@@ -362,10 +397,35 @@ const BlackJack = (props) => {
           </View>
           <View style={styles.bottomDivided}>
               <Pressable
-              onPress={() => settingMise(3)}
+              onPress={() => settingMise(2)}
               >
-              <Text style={styles.bottomText}>5</Text>
+              <Text style={styles.bottomText1}>2</Text>
               </Pressable>
+              
+          </View>
+          <View style={styles.bottomDivided}>
+              <Pressable
+              onPress={() => settingMise(5)}
+              >
+              <Text style={styles.bottomText2}>5</Text>
+              </Pressable>
+              
+          </View>
+          <View style={styles.bottomDivided}>
+              <Pressable
+              onPress={() => settingMise(10)}
+              >
+              <Text style={styles.bottomText3}>10</Text>
+              </Pressable>
+              
+          </View>
+          <View style={styles.bottomDivided}>
+              <Pressable
+              onPress={() => settingMise(0)}
+              >
+              <Text style={styles.bottomText4}>X</Text>
+              </Pressable>
+              
           </View>
         </View>
         }
@@ -390,7 +450,16 @@ const styles = StyleSheet.create({
 
     },
     cardInside:{
-      paddingLeft:2
+      paddingLeft:2,
+      fontSize:18
+    },  
+    cardInsideBottom:{
+      paddingLeft:2,
+      fontSize:18,
+      position:'absolute',
+      bottom:0,
+      right:0,
+      transform:[{rotate:'180deg'}]
     },  
     cardLeft:{
         height:130,
@@ -446,13 +515,50 @@ const styles = StyleSheet.create({
     },
     bottomText:{
         color:'white',
-        borderWidth:2,
         textAlign:'center',
-        backgroundColor:'red',
-        paddingHorizontal:21,
-        paddingVertical:10,
+        backgroundColor:'green',
+        paddingHorizontal:18,
+        paddingVertical:7,
         borderRadius:30,
-        borderColor:'red'
+        fontSize:18,
+    },
+    bottomText1:{
+      color:'white',
+      textAlign:'center',
+      backgroundColor:'purple',
+      paddingHorizontal:20,
+      paddingVertical:5,
+      borderRadius:30,
+      fontSize:25,
+      borderColor:'red'
+    },
+    bottomText2:{
+      color:'white',
+      textAlign:'center',
+      backgroundColor:'indigo',
+      paddingHorizontal:20,
+      paddingVertical:5,
+      borderRadius:30,
+      fontSize:25,
+    },
+    bottomText3:{
+      color:'white',
+      textAlign:'center',
+      backgroundColor:'blue',
+      paddingHorizontal:20,
+      paddingVertical:5,
+      borderRadius:30,
+      fontSize:25,
+    },
+    bottomText4:{
+      color:'white',
+      textAlign:'center',
+      backgroundColor:'gray',
+      paddingHorizontal:20,
+      paddingVertical:5,
+      borderRadius:30,
+      fontSize:25,
+      borderColor:'black'
     },
     score:{
       justifyContent:'center',
