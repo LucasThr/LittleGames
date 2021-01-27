@@ -61,13 +61,16 @@ class HomeGames extends React.Component {
               </Text>
             </TouchableOpacity>
 
-            <TouchableOpacity style={styles.boxTaquin}
-               // onPress={() => this.props.navigation.navigate('Taquin')}
-                >
-              <Image  style={styles.tinyLogo}
-              source={require('../assets/favicon.png')} />
-              <Text style={styles.titleGames}>Test</Text>
+            <TouchableOpacity style={styles.boxTouchButton}
+              onPress={() => this.props.navigation.navigate('BlackJack')}
+              >
+              <Image  style={{height:60,width:140}}
+              source={require('../assets/slotsmachine.png')} />
+              <Text  style={styles.titleGames}>
+                BlackJack
+              </Text>
             </TouchableOpacity>
+
 
             <TouchableOpacity style={styles.boxMorpion}
             //  onPress={() => this.props.navigation.navigate('Morpion')}
