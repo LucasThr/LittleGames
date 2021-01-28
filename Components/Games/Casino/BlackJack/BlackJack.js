@@ -7,18 +7,6 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 import { get } from 'react-native/Libraries/Utilities/PixelRatio';
 
 
-const Board = () =>{
-    const [isOnGame, setIsOnGame] = useState(false);
-    if(isOnGame){
-        return(
-            <Text>fff</Text>
-        )
-    }else{
-        return(
-            <Text>ffeff</Text>
-        )
-    }
-}
 
 const BlackJack = (props) => {
 
@@ -46,6 +34,7 @@ const BlackJack = (props) => {
   const [card4, setCard4] = useState(0);
   const [card6, setCard6] = useState(0);
   const [card7, setCard7] = useState(0);
+  const [card8, setCard8] = useState(0);
   const [gameState, setGameState] = useState(0)
   const [cardPlayer, setCardPlayer] = useState(0);
   const [cardBank, setCardBank] = useState(0);
@@ -53,17 +42,30 @@ const BlackJack = (props) => {
   const [mise, setMise] = useState(0);
   const [winnerText, setWinnerText] = useState("");
   const [coins, setCoins] = useState(50);
-
+  const cardFallBank1 = useRef(new Animated.Value(0)).current;
+  const cardFallBank2 = useRef(new Animated.Value(0)).current;
+  const cardFallBank3 = useRef(new Animated.Value(0)).current;
+  const cardFallBank4 = useRef(new Animated.Value(0)).current;
+  const cardFallBank5 = useRef(new Animated.Value(0)).current;
+  const cardFallPlayer1 = useRef(new Animated.Value(0)).current;
+  const cardFallPlayer2 = useRef(new Animated.Value(0)).current;
+  const cardFallPlayer3 = useRef(new Animated.Value(0)).current;
+  const cardFallPlayer4 = useRef(new Animated.Value(0)).current;
+  const cardFallPlayer5 = useRef(new Animated.Value(0)).current;
+  const cardFallPlayer6 = useRef(new Animated.Value(0)).current;
+  const cardFallPlayer7 = useRef(new Animated.Value(0)).current;
 
 
 
     useEffect(() => {
       if(cardPlayer>21){
+        setGameState(100)
         setTimeout(function(){  
             setWinnerText('Perdu')
         },500)
       } 
       if(cardPlayer==21 && gameState<3){
+        setGameState(100)
         setTimeout(function(){  
           setWinnerText('BlackJack');
           setCoins(coins => coins + mise*4)
@@ -82,78 +84,131 @@ const BlackJack = (props) => {
       }
       setArrayCardShow(oldArray => [...oldArray, random]);
       let newTotal = cardPlayer + arrayValueCard[0][random]
+      //On verifie si il y a un As pour passer sa valeur à 1 lorque le total est supérieur à 21
+      if(newTotal > 21){
+        if(random==1 || random == 14 || random == 27 || random == 40){
+          newTotal=newTotal-10
+        }
+      }
       setCardPlayer(newTotal)
 
-      return random;
+      return [random,newTotal];
     }
 
     const hit = () =>{
-     
-      if(card5==0 && gameState==2){
+      if(gameState!=100){
+        if(card5==0 && gameState==2){
+          setGameState(3)
+          let random = randoms()
+          setTimeout(function(){
+            setCard5(random[0]);
+            fadeOut(cardFallPlayer3);
+            if(random[1]<=21){
+              setGameState(4)
+            }
+          },300)
+        }else if(card6==0 && gameState==4){
+          let random = randoms()
+          setTimeout(function(){
+          setCard6(random[0]);
+          fadeOut(cardFallPlayer4);
+          if(random[1]<=21){
+            setGameState(5)
+          }
 
-      setGameState(3)
-      let random = randoms()
-      setTimeout(function(){
-        setCard5(random);
-        setGameState(4)
-      },300)
-      }else if(card6==0 && gameState==4){
-        let random = randoms()
-        setTimeout(function(){
-          setCard6(random);
-          setGameState(5)
+          },300)
+        }else if(card7==0 && gameState==5){
+          let random = randoms()
+          setTimeout(function(){
+            setCard7(random[0]);
+            fadeOut(cardFallPlayer5);
+            if(random[1]<=21){
+              setGameState(6)
+            }
+          },300)
+        } else if(card8==0 && gameState==6){
+          let random = randoms()
+          setTimeout(function(){
+            setCard8(random[0]);
+            fadeOut(cardFallPlayer6);
+            if(random[1]<=21){
+              setGameState(7)
+            }
+          },300)
+        } 
+      }
+    }
 
-        },300)
-      }else if(card7==0 && gameState==5){
-        let random = randoms()
-        setTimeout(function(){setCard7(random)},300)
-      } 
+    const checkHasAs = (random) =>{
+      
     }
 
     const stay = () =>{
-      let random = Math.floor(Math.random() * 52) + 1;
-      setTimeout(function(){setCardBank2(random)},300) 
-      let newTotalBank = cardBank + arrayValueCard[0][random]
-      let finish = false;
-      if(newTotalBank<=16){
+      if(gameState!=100){
         let random = Math.floor(Math.random() * 52) + 1;
-        setTimeout(function(){setCardBank3(random)},600)
-        newTotalBank = newTotalBank + arrayValueCard[0][random] 
-      }else{finish=true;}
-      if(newTotalBank<=16){
-        let random = Math.floor(Math.random() * 52) + 1;
-        setTimeout(function(){setCardBank4(random)},900) 
-        newTotalBank = newTotalBank + arrayValueCard[0][random] 
-      }else{finish=true;}
-      if(newTotalBank<=16){
-        let random = Math.floor(Math.random() * 52) + 1;
-        setTimeout(function(){setCardBank5(random)},1200) 
-        newTotalBank = newTotalBank + arrayValueCard[0][random] 
-      }else{finish=true;}
+        setTimeout(function(){
+          setCardBank2(random);
+          fadeOut(cardFallBank2);
+        },400) 
+        let newTotalBank = cardBank + arrayValueCard[0][random]
+        let finish = false;
+        if(newTotalBank<=16){
+          let random = Math.floor(Math.random() * 52) + 1;
+          setTimeout(function(){
+            setCardBank3(random);
+            fadeOut(cardFallBank3);
+          },800)
+          newTotalBank = newTotalBank + arrayValueCard[0][random] 
+        }else{finish=true;}
+        if(newTotalBank<=16){
+          let random = Math.floor(Math.random() * 52) + 1;
+          setTimeout(function(){
+            setCardBank4(random);
+            fadeOut(cardFallBank4);
+          },1200) 
+          newTotalBank = newTotalBank + arrayValueCard[0][random] 
+        }else{finish=true;}
+        if(newTotalBank<=16){
+          let random = Math.floor(Math.random() * 52) + 1;
+          setTimeout(function(){
+            setCardBank5(random);
+            fadeOut(cardFallBank5);
+          },1500) 
+          newTotalBank = newTotalBank + arrayValueCard[0][random] 
+        }else{finish=true;}
 
-      checkResult(newTotalBank)
+        checkResult(newTotalBank)
+      }
     }
 
 
     const checkResult = (newTotalBank) => {
         if(newTotalBank>21){
-        setTimeout(function(){        
-          setWinnerText('Gagné');
-          setCoins(coins => coins + mise*2)
-        },1200) 
+          setGameState(100)
+          setTimeout(function(){        
+            setWinnerText('Gagné');
+            setCoins(coins => coins + mise*2)
+            setGameState(100)
+          },1800) 
         }else if(newTotalBank==cardPlayer){
+          setGameState(100)
           setTimeout(function(){        
             setWinnerText('Egalité');
-          },1200) 
+            setGameState(100)
+          },1800) 
         }else if(newTotalBank>cardPlayer){
+          setGameState(100)
           setTimeout(function(){        
             setWinnerText('Perdu');
-          },1200) 
+            setGameState(100)
+          },1800) 
         }else if(newTotalBank<cardPlayer){
+            setGameState(100)
             setTimeout(function(){        
               setWinnerText('Gagné');
               setCoins(coins => coins + mise*2)
-          },1200)  
+              setGameState(100)
+          },1800)  
         }else{
           console.log(newTotalBank)
           console.log(cardPlayer)
@@ -162,7 +217,8 @@ const BlackJack = (props) => {
 
           setTimeout(function(){        
             setWinnerText('Erreur')
-          },1200) 
+            setGameState(100)
+          },1800) 
         }
     }
 
@@ -181,6 +237,8 @@ const BlackJack = (props) => {
       setTimeout(function(){ 
         setCard3(random);
         setArrayCardShow(oldArray => [...oldArray, random]);
+        fadeOut(cardFallPlayer1)
+
       }
         ,100) 
       return random
@@ -198,6 +256,7 @@ const BlackJack = (props) => {
       setTimeout(function(){ 
         setCardBank1(random);
         setArrayCardShow(oldArray => [...oldArray, random]);
+        fadeOut(cardFallBank1)
       }
       ,700) 
       return random;
@@ -215,8 +274,8 @@ const BlackJack = (props) => {
       setTimeout(function(){ 
         setCard4(random);
         setArrayCardShow(oldArray => [...oldArray, random]);
-        setGameState(2);
-
+        fadeOut(cardFallPlayer2)
+        
       }
       ,1300) 
       return random;
@@ -226,6 +285,8 @@ const BlackJack = (props) => {
       setIsStart(true)
       setCoins(coins => coins - mise)
       setGameState(1)
+      setGameState(2)
+
       let a = changeCard1() //Affiche la premiere carte du joueur
       let b= changeCard2(a) //Afficher la premiere carte du croupier
       let c= changeCard3(b,a) //Affiche la seconde carte du joueur
@@ -254,6 +315,16 @@ const BlackJack = (props) => {
       setWinnerText('')
     }
 
+
+    const fadeOut = (cardToFall) => {
+      // Will change fadeAnim value to 0 in 5 seconds
+      Animated.timing(cardToFall, {
+        useNativeDriver:true,
+        toValue: 50,
+        duration: 500
+      }).start();
+    };
+
     return (
       <View style={styles.main_container}>
         <View style={{flex:1,backgroundColor:'#242424'}}>
@@ -267,50 +338,51 @@ const BlackJack = (props) => {
           </View>
           <View style={styles.viewMachine}>
    
-            <View style={{flex:1,flexDirection:'row',marginTop:20}}>
+            <View style={{flex:1,flexDirection:'row', }}>
               {cardBank1 != 0 ?
-                <View style={styles.card}>
+                <Animated.View style={[styles.card,{transform: [{translateY: cardFallBank1}]}]}>
                     <Text style={styles.cardInside}>{cardBank1 == 0 ? "?" : arrayCard[0][cardBank1]}</Text>
                     <Text style={styles.cardInsideBottom}>{cardBank1 == 0 ? "?" : arrayCard[0][cardBank1]}</Text>
-                </View>
+                </Animated.View>
                 :
                 <View></View>
               }
                 {cardBank2 != 0 ?
-                <View style={styles.card}>
+                <Animated.View style={[styles.card,{transform: [{translateY: cardFallBank2}]}]}>
                     <Text style={styles.cardInside}>{cardBank2 == 0 ? "?" : arrayCard[0][cardBank2]}</Text>
                     <Text style={styles.cardInsideBottom}>{cardBank2 == 0 ? "?" : arrayCard[0][cardBank2]}</Text>
-                </View>     
+                </Animated.View>     
                 :
                 <View></View>
               }
                 {cardBank3 != 0 ?
-                  <View style={styles.card}>
+                  <Animated.View style={[styles.card,{transform: [{translateY: cardFallBank3}]}]}>
                       <Text style={styles.cardInside}>{cardBank3 == 0 ? "?" : arrayCard[0][cardBank3]}</Text>
                       <Text style={styles.cardInsideBottom}>{cardBank3 == 0 ? "?" : arrayCard[0][cardBank3]}</Text>
-                  </View>
+                  </Animated.View>
                   :
                   <View></View>
                 }
                 {cardBank4 != 0 ?
-                  <View style={styles.card}>
+                  <Animated.View style={[styles.card,{transform: [{translateY: cardFallBank4}]}]}>
                       <Text style={styles.cardInside}>{cardBank4 == 0 ? "?" : arrayCard[0][cardBank4]}</Text>
                       <Text style={styles.cardInsideBottom}>{cardBank4 == 0 ? "?" : arrayCard[0][cardBank4]}</Text>
-                  </View>
+                  </Animated.View>
                   :
                   <View></View>
                 }
                 {cardBank5 != 0 ?
-                  <View style={styles.card}>
+                  <Animated.View style={[styles.card,{transform: [{translateY: cardFallBank5}]}]}>
                       <Text style={styles.cardInside}>{cardBank5 == 0 ? "?" : arrayCard[0][cardBank5]}</Text>
                       <Text style={styles.cardInsideBottom}>{cardBank5 == 0 ? "?" : arrayCard[0][cardBank5]}</Text>
-                  </View>
+                  </Animated.View>
                   :
                   <View></View>
                 }
             </View>
             <View style={{height:60,top:70, justifyContent:'flex-end',alignItems:'center'}}>
-              <Text style={{fontSize:30, color:'pink'}}>
+              
+              <Text style={winnerText != "" ? {fontSize:40, backgroundColor:'rgba(34, 166, 156, 0.5)',paddingVertical:3,paddingHorizontal:10,borderRadius:10, color:'lime',fontWeight:'bold'} : ""}>
                 {winnerText}
               </Text>
               {winnerText != "" ?
@@ -318,48 +390,61 @@ const BlackJack = (props) => {
               onPress={() => restart()}>
               <Text style={{fontSize:30,color:'white'}}>Rejouer</Text>
               </Pressable>
-              : <View></View>}
+              : 
+                <View>
+                </View>}
+                {gameState==0 ? <View>
+                  <Text style={{fontSize:30,color:'white'}}>Votre Mise : {mise}</Text>
+                  </View> : <View></View>}
             </View>
             <View style={{flex:2,flexDirection:'row'}}>
 
             {card3 != 0 ?
-                <View style={styles.card}>
+                <Animated.View style={[styles.card,{transform: [{translateY: cardFallPlayer1}]}]}>
                     <Text style={styles.cardInside}>{card3 == 0 ? "?" : arrayCard[0][card3]}</Text>
                     <Text style={styles.cardInsideBottom}>{card3 == 0 ? "?" : arrayCard[0][card3]}</Text>
-                </View>
+                </Animated.View>
                 :
                 <View></View>
             }
             {card4 != 0 ?
-                <View style={styles.cardLeft}>
+                <Animated.View style={[styles.cardLeft,{transform: [{translateY: cardFallPlayer2}]}]}>
                     <Text style={styles.cardInside}>{card4 == 0 ? "?" : arrayCard[0][card4]}</Text>
                     <Text style={styles.cardInsideBottom}>{card4 == 0 ? "?" : arrayCard[0][card4]}</Text>
 
-                </View>
+                </Animated.View>
                 :
                 <View></View>
             }
             {card5 != 0 ?
-                <View style={styles.cardLeft5}>
+                <Animated.View style={[styles.cardLeft5,{transform: [{translateY: cardFallPlayer3}]}]}>
                     <Text style={styles.cardInside}>{card5 == 0 ? "?" : arrayCard[0][card5]}</Text>
                     <Text style={styles.cardInsideBottom}>{card5 == 0 ? "?" : arrayCard[0][card5]}</Text>
-                </View>
+                </Animated.View>
                 :
                 <View></View>
             }
             {card6 != 0 ?
-                <View style={styles.cardLeft6}>
+                <Animated.View style={[styles.cardLeft6,{transform: [{translateY: cardFallPlayer4}]}]}>
                     <Text style={styles.cardInside}>{card6 == 0 ? "?" : arrayCard[0][card6]}</Text>
                     <Text style={styles.cardInsideBottom}>{card6 == 0 ? "?" : arrayCard[0][card6]}</Text>
-                </View>
+                </Animated.View>
                 :
                 <View></View>
             }
             {card7 != 0 ?
-                <View style={styles.cardLeft7}>
+                <Animated.View style={[styles.cardLeft7,{transform: [{translateY: cardFallPlayer5}]}]}>
                     <Text style={styles.cardInside}>{card7 == 0 ? "?" : arrayCard[0][card7]}</Text>
                     <Text style={styles.cardInsideBottom}>{card7 == 0 ? "?" : arrayCard[0][card7]}</Text>
-                </View>
+                </Animated.View>
+                :
+                <View></View>
+            }
+            {card8 != 0 ?
+                <Animated.View style={[styles.cardLeft8,{transform: [{translateY: cardFallPlayer6}]}]}>
+                    <Text style={styles.cardInside}>{card8 == 0 ? "?" : arrayCard[0][card8]}</Text>
+                    <Text style={styles.cardInsideBottom}>{card8 == 0 ? "?" : arrayCard[0][card8]}</Text>
+                </Animated.View>
                 :
                 <View></View>
             }
@@ -442,7 +527,7 @@ const styles = StyleSheet.create({
       flex: 1
     },
     card:{
-        height:130,
+        height:110,
         width:70,
         backgroundColor:'white',
         borderWidth:2,
@@ -462,7 +547,7 @@ const styles = StyleSheet.create({
       transform:[{rotate:'180deg'}]
     },  
     cardLeft:{
-        height:130,
+        height:110,
         width:70,
         backgroundColor:'white',
         borderWidth:2,
@@ -471,7 +556,7 @@ const styles = StyleSheet.create({
         marginTop:10
     },
     cardLeft5:{
-      height:130,
+      height:110,
       width:70,
       backgroundColor:'white',
       borderWidth:2,
@@ -480,7 +565,7 @@ const styles = StyleSheet.create({
       marginTop:20
     },
     cardLeft6:{
-      height:130,
+      height:110,
       width:70,
       backgroundColor:'white',
       borderWidth:2,
@@ -489,13 +574,22 @@ const styles = StyleSheet.create({
       marginTop:28
     },
     cardLeft7:{
-      height:130,
+      height:110,
       width:70,
       backgroundColor:'white',
       borderWidth:2,
       borderRadius:5,
       marginLeft:-27,
       marginTop:36
+    },
+    cardLeft8:{
+      height:110,
+      width:70,
+      backgroundColor:'white',
+      borderWidth:2,
+      borderRadius:5,
+      marginLeft:-27,
+      marginTop:42
     },
     headerScore:{
       height:40,
