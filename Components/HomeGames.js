@@ -64,8 +64,8 @@ class HomeGames extends React.Component {
             <TouchableOpacity style={styles.boxTouchButton}
               onPress={() => this.props.navigation.navigate('BlackJack')}
               >
-              <Image  style={{height:60,width:140}}
-              source={require('../assets/slotsmachine.png')} />
+              <Image  style={{height:100,width:93}}
+              source={require('../assets/blackjack.png')} />
               <Text  style={styles.titleGames}>
                 BlackJack
               </Text>

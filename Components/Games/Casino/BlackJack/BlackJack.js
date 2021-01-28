@@ -326,8 +326,8 @@ const BlackJack = (props) => {
     };
 
     return (
-      <View style={styles.main_container}>
-        <View style={{flex:1,backgroundColor:'#242424'}}>
+      <View style={[styles.main_container,{backgroundColor:'#34495e'}]}>
+        <View style={{flex:1}}>
           <View style={styles.headerScore}>
             <Text style={styles.score}>
                Coins : {coins}
@@ -382,11 +382,11 @@ const BlackJack = (props) => {
             </View>
             <View style={{height:60,top:70, justifyContent:'flex-end',alignItems:'center'}}>
               
-              <Text style={winnerText != "" ? {fontSize:40, backgroundColor:'rgba(34, 166, 156, 0.5)',paddingVertical:3,paddingHorizontal:10,borderRadius:10, color:'lime',fontWeight:'bold'} : ""}>
-                {winnerText}
+              <Text style={winnerText != "" ? {fontSize:40, backgroundColor:'rgba(34, 166, 156, 0.5)',paddingVertical:10,textAlign:'center',width:200,paddingHorizontal:0,borderRadius:10, color:'lime',fontWeight:'bold'} : ""}>
+                {winnerText} 
               </Text>
               {winnerText != "" ?
-              <Pressable style={{backgroundColor:'teal',borderRadius:10,padding:20, color:'pink',top:50,zIndex:20}}
+              <Pressable style={{backgroundColor:'teal',borderRadius:10,padding:20, color:'pink',top:50,zIndex:30}}
               onPress={() => restart()}>
               <Text style={{fontSize:30,color:'white'}}>Rejouer</Text>
               </Pressable>
@@ -395,6 +395,22 @@ const BlackJack = (props) => {
                 </View>}
                 {gameState==0 ? <View>
                   <Text style={{fontSize:30,color:'white'}}>Votre Mise : {mise}</Text>
+                  <View style={{}}>      
+                    <Pressable
+                    onPress={() => startGame()}
+                    >
+                    <Text style={{
+                      paddingHorizontal:30,
+                      paddingVertical:10,
+                      backgroundColor:'lime',
+                      borderRadius:10,
+                      color:'black',
+                      fontSize:38,
+                      textAlign:'center',
+                      marginTop:30
+                      }}>Start</Text>
+                    </Pressable> 
+                  </View>
                   </View> : <View></View>}
             </View>
             <View style={{flex:2,flexDirection:'row'}}>
@@ -456,63 +472,66 @@ const BlackJack = (props) => {
               <View style={styles.bottomDivided}>
             
                   <Pressable
+                  style={[styles.bottomText,{backgroundColor:'green'}]}
                   onPress={() => hit()}
                   >
-                  <Text style={styles.bottomText}>Hit</Text>
+                  <Text style={{fontSize:20,color:'black',fontWeight:'bold',textAlign:'center',width:60}}>Hit</Text>
                   </Pressable> 
                   
  
               </View>
               <View style={styles.bottomDivided}>
                   <Pressable
+                  style={[styles.bottomText,{backgroundColor:'red'}]}
                   onPress={() => stay()}
                   >
-                  <Text style={styles.bottomText}>Stand</Text>
+                  <Text style={{fontSize:19,color:'black',fontWeight:'bold',width:60,textAlign:'center'}}>Stand</Text>
                   </Pressable>
               </View>
             </View>
           :        
+          
           <View style={styles.bottomView}>
-          <View style={styles.bottomDivided}>      
-              <Pressable
-              onPress={() => startGame()}
-              >
-              <Text style={styles.bottomText}>Start</Text>
-              </Pressable> 
+            
+            <View style={styles.bottomDivided}>
+                <Pressable
+                onPress={() => settingMise(2)}
+                >
+                <Text style={styles.bottomText1}>2</Text>
+                </Pressable>
+                
+            </View>
+            <View style={styles.bottomDivided}>
+                <Pressable
+                onPress={() => settingMise(5)}
+                >
+                <Text style={styles.bottomText2}>5</Text>
+                </Pressable>
+                
+            </View>
+            <View style={styles.bottomDivided}>
+                <Pressable
+                onPress={() => settingMise(10)}
+                >
+                <Text style={styles.bottomText3}>10</Text>
+                </Pressable>
+                
+            </View>
+            <View style={styles.bottomDivided}>
+                <Pressable
+                onPress={() => settingMise(25)}
+                >
+                <Text style={styles.bottomText4}>25</Text>
+                </Pressable>
+            </View>
+            <View style={styles.bottomDivided}>
+                <Pressable
+                onPress={() => settingMise(0)}
+                >
+                <Text style={styles.bottomText5}>X</Text>
+                </Pressable>
+            </View>
           </View>
-          <View style={styles.bottomDivided}>
-              <Pressable
-              onPress={() => settingMise(2)}
-              >
-              <Text style={styles.bottomText1}>2</Text>
-              </Pressable>
-              
-          </View>
-          <View style={styles.bottomDivided}>
-              <Pressable
-              onPress={() => settingMise(5)}
-              >
-              <Text style={styles.bottomText2}>5</Text>
-              </Pressable>
-              
-          </View>
-          <View style={styles.bottomDivided}>
-              <Pressable
-              onPress={() => settingMise(10)}
-              >
-              <Text style={styles.bottomText3}>10</Text>
-              </Pressable>
-              
-          </View>
-          <View style={styles.bottomDivided}>
-              <Pressable
-              onPress={() => settingMise(0)}
-              >
-              <Text style={styles.bottomText4}>X</Text>
-              </Pressable>
-              
-          </View>
-        </View>
         }
           
         </View>
@@ -592,11 +611,12 @@ const styles = StyleSheet.create({
       marginTop:42
     },
     headerScore:{
-      height:40,
+      height:60,
       flexDirection:'row',
-      marginVertical:10,
+      marginBottom:10,
       justifyContent:'space-around',
-      alignItems:'center'
+      alignItems:'center',
+      backgroundColor:'black'
     },
     bottomView:{
         height:80,
@@ -610,49 +630,81 @@ const styles = StyleSheet.create({
     bottomText:{
         color:'white',
         textAlign:'center',
+        justifyContent:'center',
+        alignContent:'center',
         backgroundColor:'green',
-        paddingHorizontal:18,
-        paddingVertical:7,
+        paddingHorizontal:30,
+        paddingVertical:13,
         borderRadius:30,
-        fontSize:18,
     },
     bottomText1:{
       color:'white',
       textAlign:'center',
       backgroundColor:'purple',
-      paddingHorizontal:20,
-      paddingVertical:5,
-      borderRadius:30,
+      textAlignVertical:'center',
+      textAlign:'center',
+      width:50,
+      height:50,
+      borderRadius:50,
       fontSize:25,
-      borderColor:'red'
+      borderColor:'black',
+      borderWidth:4,
+      borderStyle:'dashed'
     },
     bottomText2:{
       color:'white',
       textAlign:'center',
       backgroundColor:'indigo',
-      paddingHorizontal:20,
-      paddingVertical:5,
+      textAlignVertical:'center',
+      textAlign:'center',
+      width:50,
+      height:50,
       borderRadius:30,
       fontSize:25,
+      borderColor:'black',
+      borderWidth:4,
+      borderStyle:'dashed'
     },
     bottomText3:{
       color:'white',
       textAlign:'center',
       backgroundColor:'blue',
-      paddingHorizontal:20,
-      paddingVertical:5,
+      textAlignVertical:'center',
+      textAlign:'center',
+      width:50,
+      height:50,
       borderRadius:30,
       fontSize:25,
+      borderColor:'black',
+      borderWidth:4,
+      borderStyle:'dashed'
     },
     bottomText4:{
       color:'white',
       textAlign:'center',
-      backgroundColor:'gray',
-      paddingHorizontal:20,
-      paddingVertical:5,
+      backgroundColor:'red',
+      textAlignVertical:'center',
+      textAlign:'center',
+      width:50,
+      height:50,
       borderRadius:30,
       fontSize:25,
-      borderColor:'black'
+      borderColor:'black',
+      borderWidth:4,
+      borderStyle:'dashed'
+    },
+    bottomText5:{
+      color:'white',
+      textAlign:'center',
+      backgroundColor:'gray',
+      textAlignVertical:'center',
+      textAlign:'center',
+      width:50,
+      height:50,
+      borderRadius:30,
+      fontSize:25,
+      borderColor:'black',
+ 
     },
     score:{
       justifyContent:'center',
@@ -666,71 +718,6 @@ const styles = StyleSheet.create({
       alignItems:'center',
       justifyContent:'center',
       backgroundColor:'#34495e'
-    },
-    viewSlots:{
-      flex:3,
-      flexDirection:'row',
-      alignItems:'center',
-      justifyContent:'center',
-      backgroundColor:'#f1c40f',
-      borderRadius:30,
-      marginVertical:100,
-      paddingHorizontal:15,
-
-    },
-    slot:{
-      alignItems:'center',
-      justifyContent:'center',
-      height:100,
-      width:110,
-      borderWidth:3,
-      borderRadius:20,
-      marginHorizontal:5,
-      backgroundColor:'#f9e79f'
-    },
-    backGroundSlotFalse:{
-      backgroundColor:'white'
-    },
-    backGroundSlotTrue:{
-      backgroundColor:'gray'
-    },
-    textSlot:{
-      fontSize:50,
-      fontWeight:'bold',
-      color:'red'
-    },
-    buttonSlot:{
-      width:200,
-      height:90,
-      backgroundColor:'#e74c3c',
-      alignItems:'center',
-      justifyContent:'center',
-      borderWidth:1,
-      borderRadius:10
-    },
-    viewButton:{
-      flex:1,
-      alignItems:'center',
-      justifyContent:'center',
-      height:200,
-      bottom:0,
-      backgroundColor:'#34495e',
-
-    },
-    start:{
-      fontSize:50,
-      textAlign:'center',
-      justifyContent:'center',
-    },
-    viewGain:{
-      flex:1,
-      justifyContent:'center'
-
-    },
-    gain:{
-      fontSize:30,
-      color:'white'
-
     },
   })
   
