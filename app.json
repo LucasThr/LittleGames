@@ -2,7 +2,7 @@
   "expo": {
     "name": "LittleGames",
     "slug": "LittleGames",
-    "version": "1.0.5",
+    "version": "1.1",
     "orientation": "portrait",
     "icon": "./assets/icone.png",
     "splash": {
@@ -25,7 +25,7 @@
         "backgroundColor": "#FFFFFF"
       },
       "package": "fr.lucasthr.littlegameslt",
-      "versionCode": 12
+      "versionCode": 14
     },
     "web": {
       "favicon": "./assets/favicon.png"

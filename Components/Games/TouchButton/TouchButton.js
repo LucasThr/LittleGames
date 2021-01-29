@@ -151,6 +151,7 @@ React.useEffect(() => {
         alignContent:'center', 
         height:60
       }}
+  
         onPress={() => 
         restartGame()
         }>

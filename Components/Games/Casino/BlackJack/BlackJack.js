@@ -5,7 +5,7 @@ import { StyleSheet,Text,Button, Animated,ImageBackground,Pressable, TouchableOp
 import { set } from 'react-native-reanimated';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { get } from 'react-native/Libraries/Utilities/PixelRatio';
-
+import { Audio } from 'expo-av';
 
 
 const BlackJack = (props) => {
@@ -42,6 +42,7 @@ const BlackJack = (props) => {
   const [mise, setMise] = useState(0);
   const [winnerText, setWinnerText] = useState("");
   const [coins, setCoins] = useState(50);
+  const [isDouble, setIsDouble] = useState(false);
   const cardFallBank1 = useRef(new Animated.Value(0)).current;
   const cardFallBank2 = useRef(new Animated.Value(0)).current;
   const cardFallBank3 = useRef(new Animated.Value(0)).current;
@@ -54,22 +55,41 @@ const BlackJack = (props) => {
   const cardFallPlayer5 = useRef(new Animated.Value(0)).current;
   const cardFallPlayer6 = useRef(new Animated.Value(0)).current;
   const cardFallPlayer7 = useRef(new Animated.Value(0)).current;
+  const [sound, setSound] = React.useState();
 
+    async function playSound() {
+      console.log('Loading Sound');
+      const { sound } = await Audio.Sound.createAsync(
+        require('../../../../assets/cardBlackjack.mp3')
+      );
+      setSound(sound);
 
+      console.log('Playing Sound');
+      await sound.playAsync(); }
+
+    React.useEffect(() => {
+      return sound
+        ? () => {
+            console.log('Unloading Sound');
+            sound.unloadAsync(); }
+        : undefined;
+    }, [sound]);
 
     useEffect(() => {
-      if(cardPlayer>21){
-        setGameState(100)
-        setTimeout(function(){  
-            setWinnerText('Perdu')
-        },500)
-      } 
-      if(cardPlayer==21 && gameState<3){
-        setGameState(100)
-        setTimeout(function(){  
-          setWinnerText('BlackJack');
-          setCoins(coins => coins + mise*4)
-        },500)
+      if(!isDouble){
+        if(cardPlayer>21){
+          setGameState(100)
+          setTimeout(function(){  
+              setWinnerText('Perdu')
+          },500)
+        } 
+        if(cardPlayer==21 && gameState<3){
+          setGameState(100)
+          setTimeout(function(){  
+            setWinnerText('BlackJack');
+            setCoins(coins => coins + mise*4)
+          },500)
+        }
       }
     },[cardPlayer])
 
@@ -95,6 +115,21 @@ const BlackJack = (props) => {
       return [random,newTotal];
     }
 
+    const double = () =>{
+      if(card5==0 && gameState==2){
+        setCoins(coins => coins - mise)
+        let random = randoms()
+        setTimeout(function(){
+          setCard5(random[0]);
+          fadeOut(cardFallPlayer3);
+          playSound()
+        },300)
+        setIsDouble(true)
+        console.log(arrayValueCard[0][random[0]])
+        stay(arrayValueCard[0][random[0]],true)
+      }
+    }
+
     const hit = () =>{
       if(gameState!=100){
         if(card5==0 && gameState==2){
@@ -105,7 +140,10 @@ const BlackJack = (props) => {
             fadeOut(cardFallPlayer3);
             if(random[1]<=21){
               setGameState(4)
+              
+
             }
+            playSound()
           },300)
         }else if(card6==0 && gameState==4){
           let random = randoms()
@@ -115,7 +153,7 @@ const BlackJack = (props) => {
           if(random[1]<=21){
             setGameState(5)
           }
-
+            playSound()
           },300)
         }else if(card7==0 && gameState==5){
           let random = randoms()
@@ -125,6 +163,7 @@ const BlackJack = (props) => {
             if(random[1]<=21){
               setGameState(6)
             }
+            playSound()
           },300)
         } else if(card8==0 && gameState==6){
           let random = randoms()
@@ -134,21 +173,31 @@ const BlackJack = (props) => {
             if(random[1]<=21){
               setGameState(7)
             }
+            playSound()
           },300)
         } 
       }
     }
 
-    const checkHasAs = (random) =>{
+    const stay = (cardPlay,doubleVerify) =>{
       
-    }
-
-    const stay = () =>{
       if(gameState!=100){
+        if(doubleVerify){
+          setGameState(100)
+          console.log('double')
+          console.log(cardPlay)
+          var newTotalPlayer = cardPlay + cardPlayer;
+          console.log(newTotalPlayer)
+          console.log('|||')
+        }else{
+          var newTotalPlayer = 0;
+          console.log('PAS DOUBLE')
+        }
         let random = Math.floor(Math.random() * 52) + 1;
         setTimeout(function(){
           setCardBank2(random);
           fadeOut(cardFallBank2);
+          playSound()
         },400) 
         let newTotalBank = cardBank + arrayValueCard[0][random]
         let finish = false;
@@ -157,6 +206,7 @@ const BlackJack = (props) => {
           setTimeout(function(){
             setCardBank3(random);
             fadeOut(cardFallBank3);
+            playSound()
           },800)
           newTotalBank = newTotalBank + arrayValueCard[0][random] 
         }else{finish=true;}
@@ -165,6 +215,7 @@ const BlackJack = (props) => {
           setTimeout(function(){
             setCardBank4(random);
             fadeOut(cardFallBank4);
+            playSound()
           },1200) 
           newTotalBank = newTotalBank + arrayValueCard[0][random] 
         }else{finish=true;}
@@ -173,47 +224,62 @@ const BlackJack = (props) => {
           setTimeout(function(){
             setCardBank5(random);
             fadeOut(cardFallBank5);
+            playSound()
           },1500) 
           newTotalBank = newTotalBank + arrayValueCard[0][random] 
         }else{finish=true;}
-
-        checkResult(newTotalBank)
+        
+        checkResult(newTotalBank,newTotalPlayer,doubleVerify)
       }
     }
 
 
-    const checkResult = (newTotalBank) => {
-        if(newTotalBank>21){
-          setGameState(100)
-          setTimeout(function(){        
-            setWinnerText('Gagné');
-            setCoins(coins => coins + mise*2)
-            setGameState(100)
-          },1800) 
-        }else if(newTotalBank==cardPlayer){
-          setGameState(100)
-          setTimeout(function(){        
-            setWinnerText('Egalité');
-            setGameState(100)
-          },1800) 
-        }else if(newTotalBank>cardPlayer){
+    const checkResult = (newTotalBank,newTotalPlayer,doubleVerify) => {
+        let double = doubleVerify ? 2 : 1;
+        console.log(double)
+        if(newTotalPlayer>21){
           setGameState(100)
           setTimeout(function(){        
             setWinnerText('Perdu');
             setGameState(100)
+          },1800)
+        }else if(newTotalBank>21){
+          setGameState(100)
+          setTimeout(function(){        
+            setWinnerText('Gagné');
+            setCoins(coins => coins + (mise*2)*double)
+            setGameState(100)
           },1800) 
-        }else if(newTotalBank<cardPlayer){
+        }else if(newTotalBank==newTotalPlayer || newTotalBank==cardPlayer){
+          setGameState(100)
+          setTimeout(function(){        
+            setWinnerText('Egalité');
+            setCoins(coins => coins + mise)
+            setGameState(100)
+          },1800) 
+        }else if(newTotalBank<cardPlayer || newTotalBank<newTotalPlayer){
             setGameState(100)
             setTimeout(function(){        
               setWinnerText('Gagné');
-              setCoins(coins => coins + mise*2)
+              setCoins(coins => coins + (mise*2)*double)
               setGameState(100)
-          },1800)  
+          },1800)
+        }else if(newTotalBank>newTotalPlayer && newTotalBank>cardPlayer){
+            console.log(newTotalBank)
+            console.log(cardPlayer)
+            console.log(newTotalPlayer)
+            setGameState(100)
+            setTimeout(function(){        
+              setWinnerText('Perdu');
+              setGameState(100)
+            },1800)   
         }else{
           console.log(newTotalBank)
           console.log(cardPlayer)
           console.log(cardBank)
           console.log(arrayCardShow)
+          console.log(newTotalPlayer)
+          console.log(double)
 
           setTimeout(function(){        
             setWinnerText('Erreur')
@@ -238,7 +304,7 @@ const BlackJack = (props) => {
         setCard3(random);
         setArrayCardShow(oldArray => [...oldArray, random]);
         fadeOut(cardFallPlayer1)
-
+        playSound()
       }
         ,100) 
       return random
@@ -257,6 +323,7 @@ const BlackJack = (props) => {
         setCardBank1(random);
         setArrayCardShow(oldArray => [...oldArray, random]);
         fadeOut(cardFallBank1)
+        playSound()
       }
       ,700) 
       return random;
@@ -275,6 +342,7 @@ const BlackJack = (props) => {
         setCard4(random);
         setArrayCardShow(oldArray => [...oldArray, random]);
         fadeOut(cardFallPlayer2)
+        playSound()
         
       }
       ,1300) 
@@ -313,6 +381,7 @@ const BlackJack = (props) => {
       setIsStart(false)
       setMise(0)
       setWinnerText('')
+      setIsDouble(false)
     }
 
 
@@ -326,7 +395,7 @@ const BlackJack = (props) => {
     };
 
     return (
-      <View style={[styles.main_container,{backgroundColor:'#34495e'}]}>
+      <View style={[styles.main_container,{backgroundColor:'#2d523c'}]}>
         <View style={{flex:1}}>
           <View style={styles.headerScore}>
             <Text style={styles.score}>
@@ -386,7 +455,7 @@ const BlackJack = (props) => {
                 {winnerText} 
               </Text>
               {winnerText != "" ?
-              <Pressable style={{backgroundColor:'teal',borderRadius:10,padding:20, color:'pink',top:50,zIndex:30}}
+              <Pressable style={{backgroundColor:'teal',borderRadius:10,padding:20, color:'pink',top:140,zIndex:30}}
               onPress={() => restart()}>
               <Text style={{fontSize:30,color:'white'}}>Rejouer</Text>
               </Pressable>
@@ -482,10 +551,18 @@ const BlackJack = (props) => {
               </View>
               <View style={styles.bottomDivided}>
                   <Pressable
-                  style={[styles.bottomText,{backgroundColor:'red'}]}
+                  style={[styles.bottomText,{backgroundColor:'#cd0c0c'}]}
                   onPress={() => stay()}
                   >
                   <Text style={{fontSize:19,color:'black',fontWeight:'bold',width:60,textAlign:'center'}}>Stand</Text>
+                  </Pressable>
+              </View>
+              <View style={styles.bottomDivided}>
+                  <Pressable
+                  style={[styles.bottomText,{backgroundColor:'#0e6ebe'}]}
+                  onPress={() => double()}
+                  >
+                  <Text style={{fontSize:19,color:'black',fontWeight:'bold',width:70,textAlign:'center'}}>Double</Text>
                   </Pressable>
               </View>
             </View>
@@ -497,15 +574,19 @@ const BlackJack = (props) => {
                 <Pressable
                 onPress={() => settingMise(2)}
                 >
-                <Text style={styles.bottomText1}>2</Text>
+                <View style={[styles.bottomTextCircle,{backgroundColor:'#dbe3e3'}]}>
+                  <Text style={styles.bottomText1}>2</Text>
+                </View>
                 </Pressable>
                 
             </View>
-            <View style={styles.bottomDivided}>
+            <View style={[styles.bottomDivided]}>
                 <Pressable
                 onPress={() => settingMise(5)}
                 >
-                <Text style={styles.bottomText2}>5</Text>
+                <View style={[styles.bottomTextCircle,{backgroundColor:'#dbe3e3'}]}>
+                  <Text style={styles.bottomText2}>5</Text>
+                </View>
                 </Pressable>
                 
             </View>
@@ -513,7 +594,9 @@ const BlackJack = (props) => {
                 <Pressable
                 onPress={() => settingMise(10)}
                 >
-                <Text style={styles.bottomText3}>10</Text>
+                <View style={[styles.bottomTextCircle,{backgroundColor:'#dbe3e3'}]}>
+                  <Text style={styles.bottomText3}>10</Text>
+                </View>
                 </Pressable>
                 
             </View>
@@ -521,7 +604,9 @@ const BlackJack = (props) => {
                 <Pressable
                 onPress={() => settingMise(25)}
                 >
-                <Text style={styles.bottomText4}>25</Text>
+                <View style={[styles.bottomTextCircle,{backgroundColor:'#dbe3e3'}]}>
+                  <Text style={styles.bottomText4}>25</Text>
+                </View>
                 </Pressable>
             </View>
             <View style={styles.bottomDivided}>
@@ -638,7 +723,7 @@ const styles = StyleSheet.create({
         borderRadius:30,
     },
     bottomText1:{
-      color:'white',
+      color:'#dbe3e3',
       textAlign:'center',
       backgroundColor:'purple',
       textAlignVertical:'center',
@@ -647,12 +732,26 @@ const styles = StyleSheet.create({
       height:50,
       borderRadius:50,
       fontSize:25,
+      fontWeight:'bold',
       borderColor:'black',
       borderWidth:4,
       borderStyle:'dashed'
     },
+    bottomTextCircle:{
+      color:'gray',
+      textAlign:'center',
+      backgroundColor:'indigo',
+      textAlignVertical:'center',
+      textAlign:'center',
+      width:50,
+      height:50,
+      borderRadius:30,
+      fontWeight:'bold',
+      fontSize:25,
+      borderColor:'black',
+    },
     bottomText2:{
-      color:'white',
+      color:'#dbe3e3',
       textAlign:'center',
       backgroundColor:'indigo',
       textAlignVertical:'center',
@@ -661,18 +760,20 @@ const styles = StyleSheet.create({
       height:50,
       borderRadius:30,
       fontSize:25,
+      fontWeight:'bold',
       borderColor:'black',
       borderWidth:4,
       borderStyle:'dashed'
     },
     bottomText3:{
-      color:'white',
+      color:'#dbe3e3',
       textAlign:'center',
       backgroundColor:'blue',
       textAlignVertical:'center',
       textAlign:'center',
       width:50,
       height:50,
+      fontWeight:'bold',
       borderRadius:30,
       fontSize:25,
       borderColor:'black',
@@ -680,7 +781,7 @@ const styles = StyleSheet.create({
       borderStyle:'dashed'
     },
     bottomText4:{
-      color:'white',
+      color:'#dbe3e3',
       textAlign:'center',
       backgroundColor:'red',
       textAlignVertical:'center',
@@ -689,18 +790,20 @@ const styles = StyleSheet.create({
       height:50,
       borderRadius:30,
       fontSize:25,
+      fontWeight:'bold',
       borderColor:'black',
       borderWidth:4,
       borderStyle:'dashed'
     },
     bottomText5:{
-      color:'white',
+      color:'#dbe3e3',
       textAlign:'center',
-      backgroundColor:'gray',
+      backgroundColor:'#302f2f',
       textAlignVertical:'center',
       textAlign:'center',
-      width:50,
-      height:50,
+      width:55,
+      fontWeight:'bold',
+      height:55,
       borderRadius:30,
       fontSize:25,
       borderColor:'black',
@@ -717,7 +820,6 @@ const styles = StyleSheet.create({
       flex:1,
       alignItems:'center',
       justifyContent:'center',
-      backgroundColor:'#34495e'
     },
   })
   

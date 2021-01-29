@@ -29,8 +29,8 @@ const Drawer = createDrawerNavigator();
 
 function StackHome({ navigation }) {
   return(
-    <Stack.Navigator initialRouteName="HomeGames" >
-      <Stack.Screen name="HomeGames" component={HomeGames}
+    <Stack.Navigator initialRouteName="Accueil" >
+      <Stack.Screen name="Accueil" component={HomeGames}
               options={{
                 headerTintColor: '#c4c4c4',
                 headerStyle: {
@@ -63,13 +63,13 @@ function StackHome({ navigation }) {
         headerStyle: {
           backgroundColor: '#403f3f',
         }}} />
-      <Stack.Screen name="TouchBall" component={TouchButton}
+      <Stack.Screen name="Fast Ball" component={TouchButton}
        options={{
         headerTintColor: '#c4c4c4',
         headerStyle: {
           backgroundColor: '#403f3f',
         }}} />
-      <Stack.Screen name="SlotMachine" component={SlotMachine}
+      <Stack.Screen name="Machine à Sous" component={SlotMachine}
        options={{
         headerTintColor: '#c4c4c4',
         headerStyle: {

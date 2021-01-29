@@ -1,7 +1,7 @@
 // ../Components/HomeGames.js
 
 import React from 'react'
-import { StyleSheet,Text, TouchableOpacity, View, Image } from 'react-native'
+import { StyleSheet,Text, TouchableOpacity, View, Image, ImageBackground, Pressable } from 'react-native'
 import { FlatList, ScrollView } from 'react-native-gesture-handler'
 
 
@@ -11,78 +11,146 @@ class HomeGames extends React.Component {
   render() {
     return (
       <View style={styles.main_container}>
-        <View style={styles.sub_container}>
-        
-          <Text style={styles.title}>Games </Text>
-          <View>
-            <ScrollView
-            horizontal={true}
-            showsHorizontalScrollIndicator={false}>
-            <TouchableOpacity style={styles.boxTouchButton}
-              onPress={() => this.props.navigation.navigate('TouchBall')}
-              >
-              <Image  style={{width:150,height:70,}}
-              source={require('../assets/balle.png')} />
-              <Text  style={styles.titleGames}>
-                Touch Ball
-              </Text>
-      
-            </TouchableOpacity>
-            <TouchableOpacity style={styles.boxTaquin}
+        <ImageBackground source={require('../assets/homeBackground.jpg')} style={styles.imageBackground}>
+          
+          <ScrollView
+          style={styles.sub_container}
+              showsVerticalScrollIndicator={false}>
+            <Pressable style={styles.pressableBox}
+              onPress={() => this.props.navigation.navigate('BlackJack')}>
+              <ImageBackground source={require('../assets/blackJackAccueil.jpg')} style={styles.imageBox} imageStyle={{ borderRadius: 6}}>
+                <View style={styles.subTitlePressable}>
+                  <Text style={styles.textBox}>
+                    BlackJack
+                  </Text>
+                </View>
+              </ImageBackground>
+            </Pressable>
+
+            <Pressable style={styles.pressableBox}
+              onPress={() => this.props.navigation.navigate('Machine à Sous')}>
+              <ImageBackground source={require('../assets/SlotMachineAccueil.png')} style={styles.imageBox} imageStyle={{ borderRadius: 6}}>
+                <View style={styles.subTitlePressable}>
+                  <Text style={styles.textBox}>
+                    Machine à Sous
+                  </Text>
+                </View>
+              </ImageBackground>
+            </Pressable>
+
+            <Pressable style={styles.pressableBox}
+                onPress={() => this.props.navigation.navigate('Fast Ball')}
+                >
+              <ImageBackground source={require('../assets/greenfond.webp')} style={styles.imageBox} imageStyle={{ borderRadius: 6}}>
+                <View style={styles.subTitlePressable}>
+                  <Text style={styles.textBox}>
+                    Fast Ball
+                  </Text>
+                </View>
+              </ImageBackground>
+            </Pressable>
+
+            <Pressable style={styles.pressableBox}
                 onPress={() => this.props.navigation.navigate('Taquin')}
                 >
-              <Image  style={styles.tinyLogo}
-              source={require('../assets/taquin.png')} />
-              <Text style={styles.titleGames}>Taquin</Text>
-            </TouchableOpacity>
-            <TouchableOpacity style={styles.boxMorpion}
-              onPress={() => this.props.navigation.navigate('Morpion')}
-              >
-              <Image  style={styles.tinyLogo}
-              source={require('../assets/morpion.png')} />
+              <ImageBackground source={require('../assets/TaquinAccueil.webp')} style={styles.imageBox} imageStyle={{ borderRadius: 6}}>
+                <View style={styles.subTitlePressable}>
+                  <Text style={styles.textBox}>
+                    Taquin
+                  </Text>
+                </View>
+              </ImageBackground>
+            </Pressable>
 
-              <Text style={styles.titleGames}>Morpion</Text>
-      
-            </TouchableOpacity>
-            </ScrollView>
-          </View>
-          <Text style={styles.title}>Casino </Text>
-          <View>
-            <ScrollView
-            horizontal={true}
-            showsHorizontalScrollIndicator={false}>
-            <TouchableOpacity style={styles.boxTouchButton}
-              onPress={() => this.props.navigation.navigate('SlotMachine')}
-              >
-              <Image  style={{height:60,width:140}}
-              source={require('../assets/slotsmachine.png')} />
-              <Text  style={styles.titleGames}>
-                Slots
-              </Text>
-            </TouchableOpacity>
-
-            <TouchableOpacity style={styles.boxTouchButton}
-              onPress={() => this.props.navigation.navigate('BlackJack')}
-              >
-              <Image  style={{height:100,width:93}}
-              source={require('../assets/blackjack.png')} />
-              <Text  style={styles.titleGames}>
-                BlackJack
-              </Text>
-            </TouchableOpacity>
-
-
-            <TouchableOpacity style={styles.boxMorpion}
-            //  onPress={() => this.props.navigation.navigate('Morpion')}
-              >
-              <Image  style={styles.tinyLogo}
-              source={require('../assets/favicon.png')} />
-              <Text style={styles.titleGames}>Test</Text>
-            </TouchableOpacity>
+            <Pressable style={styles.pressableBox}
+                onPress={() => this.props.navigation.navigate('Morpion')}
+                >
+              <ImageBackground source={require('../assets/morpionAccueil.jpg')} style={styles.imageBox} imageStyle={{ borderRadius: 6}}>
+                <View style={styles.subTitlePressable}>
+                  <Text style={styles.textBox}>
+                    Morpion
+                  </Text>
+                </View>
+              </ImageBackground>
+            </Pressable>
 
             </ScrollView>
-          </View>
-        </View>
+            {/* <Text style={styles.title}>Games</Text>
+            <View>
+              <ScrollView
+              horizontal={true}
+              showsHorizontalScrollIndicator={false}>
+              <TouchableOpacity style={styles.boxTouchButton}
+                activeOpacity={0.8}
+                onPress={() => this.props.navigation.navigate('TouchBall')}
+                >
+                <Image  style={{width:150,height:70,}}
+                source={require('../assets/balle.png')} />
+                <Text  style={styles.titleGames}>
+                  Touch Ball
+                </Text>
+        
+              </TouchableOpacity>
+              <TouchableOpacity style={styles.boxTaquin}
+                  activeOpacity={0.8}
+                  onPress={() => this.props.navigation.navigate('Taquin')}
+                  >
+                <Image  style={styles.tinyLogo}
+                source={require('../assets/taquin.png')} />
+                <Text style={styles.titleGames}>Taquin</Text>
+              </TouchableOpacity>
+              <TouchableOpacity style={styles.boxMorpion}
+                activeOpacity={0.8}
+                onPress={() => this.props.navigation.navigate('Morpion')}
+                >
+                <Image  style={styles.tinyLogo}
+                source={require('../assets/morpion.png')} />
+
+                <Text style={styles.titleGames}>Morpion</Text>
+        
+              </TouchableOpacity>
+              </ScrollView>
+            </View>
+            <Text style={styles.title}>Casino </Text>
+            <View>
+              <ScrollView
+              horizontal={true}
+              showsHorizontalScrollIndicator={false}>
+              <TouchableOpacity style={styles.boxTouchButton}
+                activeOpacity={0.8}
+                onPress={() => this.props.navigation.navigate('SlotMachine')}
+                >
+                <Image  style={{height:60,width:140}}
+                source={require('../assets/slotsmachine.png')} />
+                <Text  style={styles.titleGames}>
+                  Slots
+                </Text>
+              </TouchableOpacity>
+
+              <TouchableOpacity style={styles.boxTouchButton}
+                activeOpacity={0.8}
+                onPress={() => this.props.navigation.navigate('BlackJack')}
+                >
+                <Image  style={{height:100,width:93}}
+                source={require('../assets/blackjack.png')} />
+                <Text  style={styles.titleGames}>
+                  BlackJack
+                </Text>
+              </TouchableOpacity>
+
+
+              <TouchableOpacity style={styles.boxMorpion}
+                activeOpacity={0.8}
+              //  onPress={() => this.props.navigation.navigate('Morpion')}
+                >
+                <Image  style={styles.tinyLogo}
+                source={require('../assets/favicon.png')} />
+                <Text style={styles.titleGames}>Test</Text>
+              </TouchableOpacity>
+
+              </ScrollView>
+            </View> */}
+        </ImageBackground>
       </View>
     )
   }
@@ -91,16 +159,40 @@ class HomeGames extends React.Component {
 const styles = StyleSheet.create({
   main_container: {
     flex: 1,
-
+  },
+  imageBackground:{
+    flex:1,
+    resizeMode:'cover'
   },
   sub_container: {
     flex: 1,
-    backgroundColor: 'rgba(52, 73, 94, 1)',
-
+    backgroundColor: 'rgba(52, 73, 94, 0.5)',
   },
   block:{
     height:180,
- 
+  },
+  imageBox:{
+    flex:1,
+    justifyContent:'flex-end'
+
+  },
+  pressableBox:{
+    height:180,
+    margin:20,
+    borderRadius:20,
+    elevation:10,
+  },
+  subTitlePressable:{
+    backgroundColor:'rgba(   1, 1, 1    , 0.4)',
+    height:60,
+    justifyContent:'center',
+    borderBottomLeftRadius:6,
+    borderBottomRightRadius:6
+  },
+  textBox:{
+    fontSize:20,
+    color:'white',
+    marginLeft:10
   },
   title:{
     fontSize:28,
