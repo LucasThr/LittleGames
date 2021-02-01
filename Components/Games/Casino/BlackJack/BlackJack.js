@@ -123,10 +123,10 @@ const BlackJack = (props) => {
           setCard5(random[0]);
           fadeOut(cardFallPlayer3);
           playSound()
+          setIsDouble(true)
+          stay(arrayValueCard[0][random[0]],true)
         },300)
-        setIsDouble(true)
-        console.log(arrayValueCard[0][random[0]])
-        stay(arrayValueCard[0][random[0]],true)
+        
       }
     }
 
@@ -375,6 +375,7 @@ const BlackJack = (props) => {
       setCard4(0)
       setCard6(0)
       setCard7(0)
+      setCard8(0)
       setGameState(0)
       setCardPlayer(0)
       setCardBank(0)
@@ -539,23 +540,20 @@ const BlackJack = (props) => {
           {isStart ? 
             <View style={styles.bottomView}>
               <View style={styles.bottomDivided}>
-            
-                  <Pressable
-                  style={[styles.bottomText,{backgroundColor:'green'}]}
-                  onPress={() => hit()}
-                  >
-                  <Text style={{fontSize:20,color:'black',fontWeight:'bold',textAlign:'center',width:60}}>Hit</Text>
-                  </Pressable> 
-                  
- 
-              </View>
-              <View style={styles.bottomDivided}>
                   <Pressable
                   style={[styles.bottomText,{backgroundColor:'#cd0c0c'}]}
                   onPress={() => stay()}
                   >
                   <Text style={{fontSize:19,color:'black',fontWeight:'bold',width:60,textAlign:'center'}}>Stand</Text>
                   </Pressable>
+              </View>
+              <View style={styles.bottomDivided}>
+                  <Pressable
+                  style={[styles.bottomText,{backgroundColor:'green'}]}
+                  onPress={() => hit()}
+                  >
+                  <Text style={{fontSize:20,color:'black',fontWeight:'bold',textAlign:'center',width:60}}>Hit</Text>
+                  </Pressable> 
               </View>
               <View style={styles.bottomDivided}>
                   <Pressable

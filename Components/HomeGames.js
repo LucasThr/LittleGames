@@ -18,60 +18,70 @@ class HomeGames extends React.Component {
               showsVerticalScrollIndicator={false}>
             <Pressable style={styles.pressableBox}
               onPress={() => this.props.navigation.navigate('BlackJack')}>
-              <ImageBackground source={require('../assets/blackJackAccueil.jpg')} style={styles.imageBox} imageStyle={{ borderRadius: 6}}>
+                {({ pressed }) => (
+              <ImageBackground source={require('../assets/blackJackAccueil.jpg')} style={[pressed ? [styles.imageBox,{top:2}] : styles.imageBox]} imageStyle={{ borderRadius: 6}}>
                 <View style={styles.subTitlePressable}>
                   <Text style={styles.textBox}>
                     BlackJack
                   </Text>
                 </View>
               </ImageBackground>
+                )}
             </Pressable>
 
             <Pressable style={styles.pressableBox}
               onPress={() => this.props.navigation.navigate('Machine à Sous')}>
-              <ImageBackground source={require('../assets/SlotMachineAccueil.png')} style={styles.imageBox} imageStyle={{ borderRadius: 6}}>
+                {({ pressed }) => (
+              <ImageBackground source={require('../assets/SlotMachineAccueil.png')} style={[pressed ? [styles.imageBox,{top:2}] : styles.imageBox]} imageStyle={{ borderRadius: 6}}>
                 <View style={styles.subTitlePressable}>
                   <Text style={styles.textBox}>
                     Machine à Sous
                   </Text>
                 </View>
               </ImageBackground>
+                )}
             </Pressable>
 
             <Pressable style={styles.pressableBox}
                 onPress={() => this.props.navigation.navigate('Fast Ball')}
                 >
-              <ImageBackground source={require('../assets/greenfond.webp')} style={styles.imageBox} imageStyle={{ borderRadius: 6}}>
+                 {({ pressed }) => (
+              <ImageBackground source={require('../assets/greenfond.webp')} style={[pressed ? [styles.imageBox,{top:2}] : styles.imageBox]} imageStyle={{ borderRadius: 6}}>
                 <View style={styles.subTitlePressable}>
                   <Text style={styles.textBox}>
                     Fast Ball
                   </Text>
                 </View>
               </ImageBackground>
+                )}
             </Pressable>
 
             <Pressable style={styles.pressableBox}
                 onPress={() => this.props.navigation.navigate('Taquin')}
                 >
-              <ImageBackground source={require('../assets/TaquinAccueil.webp')} style={styles.imageBox} imageStyle={{ borderRadius: 6}}>
+                 {({ pressed }) => (
+              <ImageBackground source={require('../assets/TaquinAccueil.webp')} style={[pressed ? [styles.imageBox,{top:2}] : styles.imageBox]} imageStyle={{ borderRadius: 6}}>
                 <View style={styles.subTitlePressable}>
                   <Text style={styles.textBox}>
                     Taquin
                   </Text>
                 </View>
               </ImageBackground>
+                )}
             </Pressable>
 
             <Pressable style={styles.pressableBox}
                 onPress={() => this.props.navigation.navigate('Morpion')}
                 >
-              <ImageBackground source={require('../assets/morpionAccueil.jpg')} style={styles.imageBox} imageStyle={{ borderRadius: 6}}>
+                 {({ pressed }) => (
+              <ImageBackground source={require('../assets/morpionAccueil.jpg')} style={[pressed ? [styles.imageBox,{top:2}] : styles.imageBox]} imageStyle={{ borderRadius: 6}}>
                 <View style={styles.subTitlePressable}>
                   <Text style={styles.textBox}>
                     Morpion
                   </Text>
                 </View>
               </ImageBackground>
+                )}
             </Pressable>
 
             </ScrollView>
