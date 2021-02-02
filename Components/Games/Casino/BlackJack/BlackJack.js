@@ -3,10 +3,8 @@
 import React, { useEffect, useState, useRef } from 'react'
 import { StyleSheet,Text,Button, Animated,ImageBackground,Pressable, TouchableOpacity, View, Image } from 'react-native'
 import { set } from 'react-native-reanimated';
-import AsyncStorage from '@react-native-async-storage/async-storage';
-import { get } from 'react-native/Libraries/Utilities/PixelRatio';
 import { Audio } from 'expo-av';
-
+import { connect, useDispatch, useSelector } from 'react-redux'
 
 const BlackJack = (props) => {
 
@@ -56,21 +54,28 @@ const BlackJack = (props) => {
   const cardFallPlayer6 = useRef(new Animated.Value(0)).current;
   const cardFallPlayer7 = useRef(new Animated.Value(0)).current;
   const [sound, setSound] = React.useState();
+  const [saveCoins, setSaveCoins] = React.useState(20);
+
+    const jetons = useSelector(state => state.jetons)
+    const dispatch = useDispatch()
+   
+    const modifyJetons = (val) => {
+      console.log('DISPATCH')
+      dispatch({ type: 'UPDATE_JETONS', payload: val })
+    }
+
 
     async function playSound() {
-      console.log('Loading Sound');
       const { sound } = await Audio.Sound.createAsync(
         require('../../../../assets/cardBlackjack.mp3')
       );
       setSound(sound);
 
-      console.log('Playing Sound');
       await sound.playAsync(); }
 
     React.useEffect(() => {
       return sound
         ? () => {
-            console.log('Unloading Sound');
             sound.unloadAsync(); }
         : undefined;
     }, [sound]);
@@ -79,17 +84,11 @@ const BlackJack = (props) => {
       if(!isDouble){
         if(cardPlayer>21){
           setGameState(100)
-          setTimeout(function(){  
+          setTimeout(function(){
+              console.log('PERDU USE EFFECT')  
               setWinnerText('Perdu')
           },500)
         } 
-        if(cardPlayer==21 && gameState<3){
-          setGameState(100)
-          setTimeout(function(){  
-            setWinnerText('BlackJack');
-            setCoins(coins => coins + mise*4)
-          },500)
-        }
       }
     },[cardPlayer])
 
@@ -117,13 +116,19 @@ const BlackJack = (props) => {
 
     const double = () =>{
       if(card5==0 && gameState==2){
+        setIsDouble(true)
+        console.log('COINS ET MISE')
+        console.log(coins)
+        console.log(mise)
+        modifyJetons(jetons - mise)
         setCoins(coins => coins - mise)
         let random = randoms()
         setTimeout(function(){
+          setGameState(8)
+          
           setCard5(random[0]);
           fadeOut(cardFallPlayer3);
           playSound()
-          setIsDouble(true)
           stay(arrayValueCard[0][random[0]],true)
         },300)
         
@@ -185,49 +190,53 @@ const BlackJack = (props) => {
         if(doubleVerify){
           setGameState(100)
           console.log('double')
-          console.log(cardPlay)
           var newTotalPlayer = cardPlay + cardPlayer;
-          console.log(newTotalPlayer)
-          console.log('|||')
+          if(cardPlay==11 && newTotalPlayer>21){
+            newTotalPlayer-=10
+          }
         }else{
           var newTotalPlayer = 0;
-          console.log('PAS DOUBLE')
         }
-        let random = Math.floor(Math.random() * 52) + 1;
-        setTimeout(function(){
-          setCardBank2(random);
-          fadeOut(cardFallBank2);
-          playSound()
-        },400) 
-        let newTotalBank = cardBank + arrayValueCard[0][random]
-        let finish = false;
-        if(newTotalBank<=16){
+        console.log(newTotalPlayer)
+        if(newTotalPlayer<=21){
           let random = Math.floor(Math.random() * 52) + 1;
           setTimeout(function(){
-            setCardBank3(random);
-            fadeOut(cardFallBank3);
+            setCardBank2(random);
+            fadeOut(cardFallBank2);
             playSound()
-          },800)
-          newTotalBank = newTotalBank + arrayValueCard[0][random] 
-        }else{finish=true;}
-        if(newTotalBank<=16){
-          let random = Math.floor(Math.random() * 52) + 1;
-          setTimeout(function(){
-            setCardBank4(random);
-            fadeOut(cardFallBank4);
-            playSound()
-          },1200) 
-          newTotalBank = newTotalBank + arrayValueCard[0][random] 
-        }else{finish=true;}
-        if(newTotalBank<=16){
-          let random = Math.floor(Math.random() * 52) + 1;
-          setTimeout(function(){
-            setCardBank5(random);
-            fadeOut(cardFallBank5);
-            playSound()
-          },1500) 
-          newTotalBank = newTotalBank + arrayValueCard[0][random] 
-        }else{finish=true;}
+          },400) 
+          var newTotalBank = cardBank + arrayValueCard[0][random]
+          let finish = false;
+          if(newTotalBank<=16){
+            let random = Math.floor(Math.random() * 52) + 1;
+            setTimeout(function(){
+              setCardBank3(random);
+              fadeOut(cardFallBank3);
+              playSound()
+            },800)
+            newTotalBank = newTotalBank + arrayValueCard[0][random] 
+          }else{finish=true;}
+          if(newTotalBank<=16){
+            let random = Math.floor(Math.random() * 52) + 1;
+            setTimeout(function(){
+              setCardBank4(random);
+              fadeOut(cardFallBank4);
+              playSound()
+            },1200) 
+            newTotalBank = newTotalBank + arrayValueCard[0][random] 
+          }else{finish=true;}
+          if(newTotalBank<=16){
+            let random = Math.floor(Math.random() * 52) + 1;
+            setTimeout(function(){
+              setCardBank5(random);
+              fadeOut(cardFallBank5);
+              playSound()
+            },1500) 
+            newTotalBank = newTotalBank + arrayValueCard[0][random] 
+          }else{finish=true;}
+        }else{
+         var newTotalBank = cardBank
+        }
         
         checkResult(newTotalBank,newTotalPlayer,doubleVerify)
       }
@@ -236,7 +245,7 @@ const BlackJack = (props) => {
 
     const checkResult = (newTotalBank,newTotalPlayer,doubleVerify) => {
         let double = doubleVerify ? 2 : 1;
-        console.log(double)
+        let bugMise = doubleVerify ? mise : 0
         if(newTotalPlayer>21){
           setGameState(100)
           setTimeout(function(){        
@@ -247,27 +256,34 @@ const BlackJack = (props) => {
           setGameState(100)
           setTimeout(function(){        
             setWinnerText('Gagné');
-            setCoins(coins => coins + (mise*2)*double)
+            console.log("GAGN")
+            console.log(coins)
+            let jetonToModify = (jetons + ((mise*2)*double)-bugMise)
+            modifyJetons(jetonToModify)
+            setCoins(coins => coins + ((mise*2)*double))
             setGameState(100)
           },1800) 
         }else if(newTotalBank==newTotalPlayer || newTotalBank==cardPlayer){
           setGameState(100)
           setTimeout(function(){        
             setWinnerText('Egalité');
+            let jetonToModify = (jetons + mise)-bugMise
             setCoins(coins => coins + mise)
+            modifyJetons(jetonToModify)
             setGameState(100)
           },1800) 
         }else if(newTotalBank<cardPlayer || newTotalBank<newTotalPlayer){
             setGameState(100)
             setTimeout(function(){        
               setWinnerText('Gagné');
+              console.log("GAGhN")
+              console.log(coins)
+              let jetonToModify = (jetons + ((mise*2)*double))-bugMise
               setCoins(coins => coins + (mise*2)*double)
+              modifyJetons(jetonToModify)
               setGameState(100)
           },1800)
         }else if(newTotalBank>newTotalPlayer && newTotalBank>cardPlayer){
-            console.log(newTotalBank)
-            console.log(cardPlayer)
-            console.log(newTotalPlayer)
             setGameState(100)
             setTimeout(function(){        
               setWinnerText('Perdu');
@@ -350,8 +366,12 @@ const BlackJack = (props) => {
     }
 
     const startGame = () => {
+      console.log('REDUX')
+      console.log(jetons)
       setIsStart(true)
+      let bugCoins = jetons - mise
       setCoins(coins => coins - mise)
+      modifyJetons(jetons - mise)
       setGameState(1)
       setGameState(2)
 
@@ -361,9 +381,19 @@ const BlackJack = (props) => {
       let totalValue= arrayValueCard[0][a] + arrayValueCard[0][c];
       setCardPlayer(totalValue)
       setCardBank(arrayValueCard[0][b])
+      if(totalValue==21){
+        setGameState(100)
+        setTimeout(function(){  
+          setWinnerText('BlackJack');
+          setCoins(coins => coins + mise*4)
+          modifyJetons(bugCoins+ mise*4)
+        },500)
+      }
     }
 
+
     const restart = () => {
+      // modifyJetons(coins)
       setArrayCardShow([]);
       setCardBank1(0)
       setCardBank2(0)
@@ -400,7 +430,8 @@ const BlackJack = (props) => {
         <View style={{flex:1}}>
           <View style={styles.headerScore}>
             <Text style={styles.score}>
-               Coins : {coins}
+               Coins : {coins} |
+               x: {jetons}
             </Text>
             <Text style={styles.score}>
                 Mise : {mise}
@@ -469,16 +500,18 @@ const BlackJack = (props) => {
                     <Pressable
                     onPress={() => startGame()}
                     >
-                    <Text style={{
+                    {({ pressed }) =>(
+                    <Text style={[{
                       paddingHorizontal:30,
                       paddingVertical:10,
-                      backgroundColor:'lime',
+                      backgroundColor: pressed ? '#17d44a' : 'lime',
                       borderRadius:10,
                       color:'black',
                       fontSize:38,
+                      borderWidth: pressed ? 2 :0,
                       textAlign:'center',
                       marginTop:30
-                      }}>Start</Text>
+                      }]}>Start</Text>)}
                     </Pressable> 
                   </View>
                   </View> : <View></View>}
@@ -541,7 +574,7 @@ const BlackJack = (props) => {
             <View style={styles.bottomView}>
               <View style={styles.bottomDivided}>
                   <Pressable
-                  style={[styles.bottomText,{backgroundColor:'#cd0c0c'}]}
+                  style={({ pressed })=>[styles.bottomText,{backgroundColor: pressed ? '#ff1b1b' : '#cd0c0c', borderWidth: pressed ? 1 :0}]}
                   onPress={() => stay()}
                   >
                   <Text style={{fontSize:19,color:'black',fontWeight:'bold',width:60,textAlign:'center'}}>Stand</Text>
@@ -549,7 +582,7 @@ const BlackJack = (props) => {
               </View>
               <View style={styles.bottomDivided}>
                   <Pressable
-                  style={[styles.bottomText,{backgroundColor:'green'}]}
+                  style={({ pressed })=>[styles.bottomText,{backgroundColor: pressed ? '#2edf1d' : '#1b9e0f', borderWidth: pressed ? 1 :0}]}
                   onPress={() => hit()}
                   >
                   <Text style={{fontSize:20,color:'black',fontWeight:'bold',textAlign:'center',width:60}}>Hit</Text>
@@ -557,7 +590,7 @@ const BlackJack = (props) => {
               </View>
               <View style={styles.bottomDivided}>
                   <Pressable
-                  style={[styles.bottomText,{backgroundColor:'#0e6ebe'}]}
+                  style={({ pressed })=>[styles.bottomText,{backgroundColor: pressed ? '#20a4e1' : '#177fb0', borderWidth: pressed ? 1 :0}]}
                   onPress={() => double()}
                   >
                   <Text style={{fontSize:19,color:'black',fontWeight:'bold',width:70,textAlign:'center'}}>Double</Text>
@@ -820,6 +853,13 @@ const styles = StyleSheet.create({
       justifyContent:'center',
     },
   })
-  
 
-  export default BlackJack;
+  const mapStateToProps = (state) => {
+    return {
+      jetons: state.jetons.amount
+    }
+  }
+  
+  export default connect(
+    mapStateToProps
+  )(BlackJack)

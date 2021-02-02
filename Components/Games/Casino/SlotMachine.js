@@ -5,6 +5,7 @@ import { StyleSheet,Text,Button, Animated,ImageBackground,Pressable, TouchableOp
 import { set } from 'react-native-reanimated';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { get } from 'react-native/Libraries/Utilities/PixelRatio';
+import { connect, useDispatch, useSelector } from 'react-redux'
 
 const SlotMachine = (props) => {
 
@@ -33,6 +34,8 @@ const SlotMachine = (props) => {
   let num2;
   let num3;
   let active;
+
+  const jetons = useSelector(state => state.jetons)
   
 
   const getData = async () => {
@@ -174,7 +177,7 @@ const randomNumber = () =>{
                Coins : {coins}
             </Text>
             <Text style={styles.score}>
-                Mise : 3
+                Mise : 3 
             </Text>
           </View>
           <View style={styles.viewMachine}>
