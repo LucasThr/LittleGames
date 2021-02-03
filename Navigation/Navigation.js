@@ -17,7 +17,7 @@ import FlappyBird from '../Components/Games/FlappyBird/Main';
 import TouchButton from '../Components/Games/TouchButton/TouchButton';
 import SlotMachine from '../Components/Games/Casino/SlotMachine';
 import BlackJack from '../Components/Games/Casino/BlackJack/BlackJack';
-import Chat from '../Components/Chat/Chat';
+import PubJetons from '../Components/Pub/Jetons';
 import { createDrawerNavigator } from '@react-navigation/drawer';
 import { DrawerContent } from './DrawerContent';
 
@@ -94,10 +94,10 @@ function StackHome({ navigation }) {
 //   );
 // }
 
-function StackChat({ navigation }) {
+function StackPubJetons({ navigation }) {
   return(
-    <Stack.Navigator initialRouteName="Chat" >
-      <Stack.Screen name="Chat" component={Chat}
+    <Stack.Navigator initialRouteName="Jetons" >
+      <Stack.Screen name="Jetons" component={PubJetons}
         options={{
        
           headerLeft: () => (
@@ -145,7 +145,7 @@ class Navigation extends React.Component{
         drawerType='back'
         drawerContent={props => <DrawerContent {...props} />}>
         <Drawer.Screen name="Home" component={StackHome} />
-        {/* <Drawer.Screen name="Chat" component={StackChat} /> */}
+        <Drawer.Screen name="Jetons" component={StackPubJetons} />
         {/* <Drawer.Screen  name="Settings" component={StackSettings} /> */}
       </Drawer.Navigator>
 

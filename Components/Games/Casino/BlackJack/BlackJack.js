@@ -60,7 +60,6 @@ const BlackJack = (props) => {
     const dispatch = useDispatch()
    
     const modifyJetons = (val) => {
-      console.log('DISPATCH')
       dispatch({ type: 'UPDATE_JETONS', payload: val })
     }
 
@@ -85,7 +84,6 @@ const BlackJack = (props) => {
         if(cardPlayer>21){
           setGameState(100)
           setTimeout(function(){
-              console.log('PERDU USE EFFECT')  
               setWinnerText('Perdu')
           },500)
         } 
@@ -117,9 +115,6 @@ const BlackJack = (props) => {
     const double = () =>{
       if(card5==0 && gameState==2){
         setIsDouble(true)
-        console.log('COINS ET MISE')
-        console.log(coins)
-        console.log(mise)
         modifyJetons(jetons - mise)
         setCoins(coins => coins - mise)
         let random = randoms()
@@ -189,7 +184,6 @@ const BlackJack = (props) => {
       if(gameState!=100){
         if(doubleVerify){
           setGameState(100)
-          console.log('double')
           var newTotalPlayer = cardPlay + cardPlayer;
           if(cardPlay==11 && newTotalPlayer>21){
             newTotalPlayer-=10
@@ -197,7 +191,6 @@ const BlackJack = (props) => {
         }else{
           var newTotalPlayer = 0;
         }
-        console.log(newTotalPlayer)
         if(newTotalPlayer<=21){
           let random = Math.floor(Math.random() * 52) + 1;
           setTimeout(function(){
@@ -256,8 +249,6 @@ const BlackJack = (props) => {
           setGameState(100)
           setTimeout(function(){        
             setWinnerText('Gagné');
-            console.log("GAGN")
-            console.log(coins)
             let jetonToModify = (jetons + ((mise*2)*double)-bugMise)
             modifyJetons(jetonToModify)
             setCoins(coins => coins + ((mise*2)*double))
@@ -276,8 +267,6 @@ const BlackJack = (props) => {
             setGameState(100)
             setTimeout(function(){        
               setWinnerText('Gagné');
-              console.log("GAGhN")
-              console.log(coins)
               let jetonToModify = (jetons + ((mise*2)*double))-bugMise
               setCoins(coins => coins + (mise*2)*double)
               modifyJetons(jetonToModify)
@@ -306,6 +295,7 @@ const BlackJack = (props) => {
 
 
     const settingMise = (add) => {
+      console.log(props)
       if(add==0){
         setMise(0)
       }else{
@@ -365,29 +355,35 @@ const BlackJack = (props) => {
       return random;
     }
 
-    const startGame = () => {
-      console.log('REDUX')
-      console.log(jetons)
-      setIsStart(true)
-      let bugCoins = jetons - mise
-      setCoins(coins => coins - mise)
-      modifyJetons(jetons - mise)
-      setGameState(1)
-      setGameState(2)
+    const needMoreCoins = () => {
 
-      let a = changeCard1() //Affiche la premiere carte du joueur
-      let b= changeCard2(a) //Afficher la premiere carte du croupier
-      let c= changeCard3(b,a) //Affiche la seconde carte du joueur
-      let totalValue= arrayValueCard[0][a] + arrayValueCard[0][c];
-      setCardPlayer(totalValue)
-      setCardBank(arrayValueCard[0][b])
-      if(totalValue==21){
-        setGameState(100)
-        setTimeout(function(){  
-          setWinnerText('BlackJack');
-          setCoins(coins => coins + mise*4)
-          modifyJetons(bugCoins+ mise*4)
-        },500)
+    }
+
+    const startGame = () => {
+      if((jetons-mise)>0){
+        needMoreCoins()
+      }else{
+        setIsStart(true)
+        let bugCoins = jetons - mise
+        setCoins(coins => coins - mise)
+        modifyJetons(jetons - mise)
+        setGameState(1)
+        setGameState(2)
+        
+        let a = changeCard1() //Affiche la premiere carte du joueur
+        let b= changeCard2(a) //Afficher la premiere carte du croupier
+        let c= changeCard3(b,a) //Affiche la seconde carte du joueur
+        let totalValue= arrayValueCard[0][a] + arrayValueCard[0][c];
+        setCardPlayer(totalValue)
+        setCardBank(arrayValueCard[0][b])
+        if(totalValue==21){
+          setGameState(100)
+          setTimeout(function(){  
+            setWinnerText('BlackJack');
+            setCoins(coins => coins + mise*4)
+            modifyJetons(bugCoins+ mise*4)
+          },500)
+        }
       }
     }
 
@@ -504,7 +500,7 @@ const BlackJack = (props) => {
                     <Text style={[{
                       paddingHorizontal:30,
                       paddingVertical:10,
-                      backgroundColor: pressed ? '#17d44a' : 'lime',
+                      backgroundColor: pressed ? '#17d44a' : '#17df41',
                       borderRadius:10,
                       color:'black',
                       fontSize:38,
@@ -515,6 +511,19 @@ const BlackJack = (props) => {
                     </Pressable> 
                   </View>
                   </View> : <View></View>}
+                  <View style={{width:300,height:60,marginBottom:-100,marginTop:20,alignItems:'center'}}>
+                    <Text style={{color:'#30e761',fontSize:24,textAlign:'justify'}}>
+                      Vous n'avez pas assez de pièces.
+                    </Text>
+                    <Pressable 
+                      onPress={() => props.navigation.navigate('Accueil')}
+                      style={{justifyContent:'center',alignItems:'center',backgroundColor:'#f0e95d',width:250,marginTop:20,borderRadius:10,height:80}}>
+                      <Text style={{color:'#e73a42',fontSize:26,textAlign:'justify'}}>
+                        Regarder une pub
+
+                      </Text>
+                    </Pressable>
+                  </View>
             </View>
             <View style={{flex:2,flexDirection:'row'}}>
 

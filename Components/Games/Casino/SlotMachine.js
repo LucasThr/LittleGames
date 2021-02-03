@@ -36,49 +36,25 @@ const SlotMachine = (props) => {
   let active;
 
   const jetons = useSelector(state => state.jetons)
-  
+  const dispatch = useDispatch()
+ 
+  const modifyJetons = (val) => {
+    console.log('DISPATCH')
+    dispatch({ type: 'UPDATE_JETONS', payload: val })
+  }
+
 
   const getData = async () => {
-    try {
-      const jsonValue = await AsyncStorage.getItem('Coins')
-      console.log(jsonValue + 'get')
-      console.log('Commencement: ' + startGame)
-      setSaveCoins(JSON.parse(jsonValue))
-      if(startGame){
-        setCoins(JSON.parse(jsonValue))
-        setStartGame(false)
-        if(JSON.parse(jsonValue)==null){
-          setCoins(50)
-        }
-      }
-      if(jsonValue != null){
-        
-        setSaveCoins(JSON.parse(jsonValue))
-      }else{
-        setSaveCoins(20)
-        
-      }
-      console.log('CATCH ??')
-      }
-    catch(e) {
-      console.log('error get')
-    }
+    setCoins(jetons)
+    setSaveCoins(jetons)
   }
 
   useEffect(() => {
+    console.log('||||||||||||')
     getData()
   }, [])
 
- const storeData = async (value) => {
-  try {
-    console.log(value +" store")
-    const jsonValue = JSON.stringify(value)
-    await AsyncStorage.setItem('Coins', jsonValue)
-    getData()
-  } catch (e) {
-    console.log('error catch')
-  }
-}
+ 
 
 useEffect(() => {
   if(isActive){
@@ -114,22 +90,21 @@ useEffect(()=>{
         setCoins(coins => coins +300)
         setGain(300)
         var newCoins = coins + 300
-        storeData(newCoins)
+        modifyJetons(newCoins)
         console.log('50 | gain : +' + gain)
     }else if(number1 == number2 || number1 == number3 || number2 == number3){
       setCoins(coins => coins +20)
       setGain(20)
       var newCoins = coins + 20
-      storeData(newCoins)
+      modifyJetons(newCoins)
       
       console.log('3 | gain : +' + gain)
     }else{
       setGain(0)
-      storeData(coins)
+      modifyJetons(coins)
       console.log('0 | gain : +' + gain)
     }
     // console.log(coins + 'store')
-    // storeData(coins)
     // winGainEffect()
   }
 
@@ -148,15 +123,13 @@ useEffect(()=>{
 // };
 
 
-useEffect(() => {
-  console.log('givegainData')
-  //storeData(coins)
-}, [giveGain])
+
 
 const randomNumber = () =>{
   if(isActive){
 
   }else{
+    modifyJetons(coins -3)
     setCoins(coins => coins - 3)
     setIsActive(true)
     setIsNumber1(false)
@@ -174,7 +147,7 @@ const randomNumber = () =>{
         <View style={{flex:1,backgroundColor:'#242424'}}>
           <View style={styles.headerScore}>
             <Text style={styles.score}>
-               Coins : {coins}
+               Coins : {coins} | {jetons}
             </Text>
             <Text style={styles.score}>
                 Mise : 3 
