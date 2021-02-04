@@ -25,9 +25,9 @@
         "backgroundColor": "#FFFFFF"
       },
       "package": "fr.lucasthr.littlegameslt",
-      "versionCode": 15,
+      "versionCode": 16,
       "config":{
-        "googleMobileAdsAppId": "~"
+        "googleMobileAdsAppId": "ca-app-pub-7571178450242877~1774285904"
       }
     },
     "web": {

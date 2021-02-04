@@ -55,6 +55,7 @@ const BlackJack = (props) => {
   const cardFallPlayer7 = useRef(new Animated.Value(0)).current;
   const [sound, setSound] = React.useState();
   const [saveCoins, setSaveCoins] = React.useState(20);
+  const [notEnoughCoins, setNotEnoughCoins] = React.useState(false);
 
     const jetons = useSelector(state => state.jetons)
     const dispatch = useDispatch()
@@ -295,7 +296,6 @@ const BlackJack = (props) => {
 
 
     const settingMise = (add) => {
-      console.log(props)
       if(add==0){
         setMise(0)
       }else{
@@ -355,14 +355,13 @@ const BlackJack = (props) => {
       return random;
     }
 
-    const needMoreCoins = () => {
-
-    }
+  
 
     const startGame = () => {
-      if((jetons-mise)>0){
-        needMoreCoins()
+      if((jetons-mise)<0){
+        setNotEnoughCoins(true)
       }else{
+        setNotEnoughCoins(false)
         setIsStart(true)
         let bugCoins = jetons - mise
         setCoins(coins => coins - mise)
@@ -426,8 +425,7 @@ const BlackJack = (props) => {
         <View style={{flex:1}}>
           <View style={styles.headerScore}>
             <Text style={styles.score}>
-               Coins : {coins} |
-               x: {jetons}
+               Coins : {jetons}
             </Text>
             <Text style={styles.score}>
                 Mise : {mise}
@@ -511,19 +509,20 @@ const BlackJack = (props) => {
                     </Pressable> 
                   </View>
                   </View> : <View></View>}
+                  {notEnoughCoins &&
                   <View style={{width:300,height:60,marginBottom:-100,marginTop:20,alignItems:'center'}}>
                     <Text style={{color:'#30e761',fontSize:24,textAlign:'justify'}}>
                       Vous n'avez pas assez de pièces.
                     </Text>
                     <Pressable 
-                      onPress={() => props.navigation.navigate('Accueil')}
+                      onPress={() => props.navigation.jumpTo('Jetons')}
                       style={{justifyContent:'center',alignItems:'center',backgroundColor:'#f0e95d',width:250,marginTop:20,borderRadius:10,height:80}}>
                       <Text style={{color:'#e73a42',fontSize:26,textAlign:'justify'}}>
                         Regarder une pub
 
                       </Text>
                     </Pressable>
-                  </View>
+                  </View>}
             </View>
             <View style={{flex:2,flexDirection:'row'}}>
 

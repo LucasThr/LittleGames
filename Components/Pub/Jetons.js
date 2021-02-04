@@ -3,7 +3,7 @@
 import React, { useEffect, useState, useRef } from 'react'
 import { useHeaderHeight } from '@react-navigation/stack'
 import { Ionicons } from '@expo/vector-icons';
-import { StyleSheet,ScrollView, Text,Icon, TouchableOpacity, Keyboard, KeyboardAvoidingView, TextInput, View, Image, Pressable } from 'react-native'
+import { StyleSheet,ScrollView, Text,ActivityIndicator, View, Image, Pressable } from 'react-native'
 import { FlatList } from 'react-native-gesture-handler'
 import { connect, useDispatch, useSelector } from 'react-redux'
 import { AdMobRewarded } from 'expo-ads-admob';
@@ -21,12 +21,14 @@ const PubJetons = (props) => {
   }
  const videoIsClose = () => {
   console.log('Rewarded set to player')
+  console.log(jetons)
   var jetonsRewarded = jetons + 30
   modifyJetons(jetonsRewarded)
+  setIsLoading(false)
  }
 
   useEffect(async () => {
-    await AdMobRewarded.setAdUnitID('ca-app-pub-3940256099942544/5224354917');
+    await AdMobRewarded.setAdUnitID('ca-app-pub-7571178450242877/3003607099');
     await AdMobRewarded.addEventListener("rewardedVideoDidRewardUser", () =>
         // setReward(reward => reward + 80),
         // setIsLoading(false),
@@ -38,7 +40,9 @@ const PubJetons = (props) => {
         console.log("Video did load")
     );
     await AdMobRewarded.addEventListener("rewardedVideoDidFailToLoad", () =>
-        console.log("Failed to load")
+        console.log("Failed to load"),
+        setIsLoading(false)
+
     );
     await AdMobRewarded.addEventListener("rewardedVideoDidOpen", () =>
         console.log("Video did open")
@@ -50,7 +54,9 @@ const PubJetons = (props) => {
         }
     );
     await AdMobRewarded.addEventListener("rewardedVideoWillLeaveApplication", () =>
-        console.log("Video did leave application")
+        console.log("Video did leave application"),
+        setIsLoading(false)
+
     );
     await AdMobRewarded.addEventListener("rewardedVideoDidStart", () =>
         console.log("Video did start")
@@ -60,6 +66,7 @@ const PubJetons = (props) => {
    const startAd = async ()  => {
      console.log('L')
      try {
+      setIsLoading(true)
      await AdMobRewarded.requestAdAsync();
     
      await AdMobRewarded.showAdAsync();
@@ -86,7 +93,9 @@ const PubJetons = (props) => {
       <Pressable
       onPress={() => startAd()}
       style={{width:380,height:90,alignItems:'center',justifyContent:'center',backgroundColor:'#db3e3e',borderRadius:18,marginTop:-60}}>
-        <Text style={{fontSize:36,height:50,textAlign:'center',color:'white'}}>Regarder une pub</Text>
+        <Text style={{fontSize:36,height:50,textAlign:'center',color:'white'}}>Regarder une pub   
+          {isLoading && <ActivityIndicator style={{paddingLeft:10}} size="large" color="#810b0b" />}
+         </Text>
       </Pressable>
       </View>
     </View>

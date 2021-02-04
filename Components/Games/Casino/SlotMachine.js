@@ -29,6 +29,7 @@ const SlotMachine = (props) => {
   const [mysteryNumber, setMysteryNumber] = useState(0);
   const [startGame, setStartGame] = useState(true);
   const [isFinish, setIsFinish] = useState(false);
+  const [notEnoughCoins, setNotEnoughCoins] = React.useState(false);
   const fontSizeGain = useRef(new Animated.Value(1)).current
   let chrono;
   let num2;
@@ -129,13 +130,17 @@ const randomNumber = () =>{
   if(isActive){
 
   }else{
-    modifyJetons(coins -3)
-    setCoins(coins => coins - 3)
-    setIsActive(true)
-    setIsNumber1(false)
-    setIsNumber2(false)
-    setIsNumber3(false)
-
+    if((jetons-3)<0){
+      setNotEnoughCoins(true)
+      }else{
+      setNotEnoughCoins(false)
+      modifyJetons(coins -3)
+      setCoins(coins => coins - 3)
+      setIsActive(true)
+      setIsNumber1(false)
+      setIsNumber2(false)
+      setIsNumber3(false)
+    }
   }
 }
 
@@ -147,14 +152,17 @@ const randomNumber = () =>{
         <View style={{flex:1,backgroundColor:'#242424'}}>
           <View style={styles.headerScore}>
             <Text style={styles.score}>
-               Coins : {coins} | {jetons}
+               Coins : {jetons}
             </Text>
             <Text style={styles.score}>
                 Mise : 3 
             </Text>
           </View>
           <View style={styles.viewMachine}>
+          {!notEnoughCoins && 
+
             <View style={styles.viewSlots}>
+          
               <View style={[styles.slot, isNumber1 ? styles.backGroundSlotFalse : styles.backgroundSlotTrue]}>
                 <Animated.Text style={styles.textSlot}>{isNumber1 ? number1 : mysteryNumber}</Animated.Text>
               </View>
@@ -164,17 +172,38 @@ const randomNumber = () =>{
               <View style={[styles.slot, isNumber3 ? styles.backGroundSlotFalse : styles.backgroundSlotTrue]}>
                 <Text style={styles.textSlot}>{isNumber3 ? number3 : mysteryNumber}</Text>
               </View>
-            </View>
+
+            </View>}
+                    
+            {notEnoughCoins && 
+                   <View style={{flex:3,justifyContent:'center',alignItems:'center'}}>
+                     <Text style={{marginBottom:60,color:'white',fontSize:24,textAlign:'center'}}>
+                       Vous n'avez pas assez de pièces.
+                     </Text>
+                     <Pressable 
+                       onPress={() => props.navigation.navigate('Jetons')}
+                       style={{justifyContent:'center',alignItems:'center',backgroundColor:'#f0e95d',width:250,marginTop:5,borderRadius:10,height:80}}>
+                       <Text style={{color:'#e73a42',fontSize:26,textAlign:'justify'}}>
+                         Regarder une pub
+ 
+                       </Text>
+                     </Pressable>
+                   </View>}
             <View style={styles.viewGain}>
+            
               <Animated.Text style={{  
                 fontSize:50,
                 opacity: isNumber3 ? 1 : 0,
                 color:'white'}}>
                   Gain : +{gain}
               </Animated.Text>
+        
             </View>
+    
           </View>
+          
           <View style={styles.viewButton}>
+            
            <Pressable style={styles.buttonSlot}
            onPressIn = {() => randomNumber()}
            >
