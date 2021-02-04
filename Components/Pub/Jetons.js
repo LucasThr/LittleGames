@@ -22,12 +22,22 @@ const PubJetons = (props) => {
  const videoIsClose = () => {
   console.log('Rewarded set to player')
   console.log(jetons)
-  var jetonsRewarded = jetons + 30
-  modifyJetons(jetonsRewarded)
+  // var jetonsRewarded = jetons + 30
+  // modifyJetons(jetonsRewarded)
+  setReward(reward => reward + 30)
   setIsLoading(false)
  }
 
-  useEffect(async () => {
+ useEffect(() => {
+    modifyJetons(reward)
+ }, [reward])
+
+useEffect(() => {
+    setReward(jetons)
+}, [startAd])
+ 
+  useEffect(() => {
+    async function adMobFunction(){
     await AdMobRewarded.setAdUnitID('ca-app-pub-7571178450242877/3003607099');
     await AdMobRewarded.addEventListener("rewardedVideoDidRewardUser", () =>
         // setReward(reward => reward + 80),
@@ -61,9 +71,12 @@ const PubJetons = (props) => {
     await AdMobRewarded.addEventListener("rewardedVideoDidStart", () =>
         console.log("Video did start")
     );
+      }
+    adMobFunction()
 }, [startAd,AdMobRewarded])
 
    const startAd = async ()  => {
+      setReward(jetons)
      console.log('L')
      try {
       setIsLoading(true)
