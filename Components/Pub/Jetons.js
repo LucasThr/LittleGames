@@ -10,6 +10,8 @@ import { AdMobRewarded } from 'expo-ads-admob';
 
 const PubJetons = (props) => {
   const [loadedAd, setLoadedAd] = useState(false);
+  const [reward,setReward] = useState(0);
+  const [isLoading,setIsLoading] = useState(false);
 
   const jetons = useSelector(state => state.jetons)
   const dispatch = useDispatch()
@@ -17,15 +19,21 @@ const PubJetons = (props) => {
   const modifyJetons = (val) => {
     dispatch({ type: 'UPDATE_JETONS', payload: val })
   }
+ const videoIsClose = () => {
+  console.log('Rewarded set to player')
+  var jetonsRewarded = jetons + 30
+  modifyJetons(jetonsRewarded)
+ }
 
   useEffect(async () => {
-    console.log('test')
     await AdMobRewarded.setAdUnitID('ca-app-pub-3940256099942544/5224354917');
-
     await AdMobRewarded.addEventListener("rewardedVideoDidRewardUser", () =>
-        console.log("Reward is binnen gekomen. ")
+        // setReward(reward => reward + 80),
+        // setIsLoading(false),
+        console.log('REWARDED'),
+        AdMobRewarded.removeAllListeners()
+
     );
-    await AdMobRewarded.requestAdAsync();
     await AdMobRewarded.addEventListener("rewardedVideoDidLoad", () =>
         console.log("Video did load")
     );
@@ -37,6 +45,8 @@ const PubJetons = (props) => {
     );
     await AdMobRewarded.addEventListener("rewardedVideoDidClose", () => {
             console.log("video did close")
+            videoIsClose()
+
         }
     );
     await AdMobRewarded.addEventListener("rewardedVideoWillLeaveApplication", () =>
@@ -45,12 +55,20 @@ const PubJetons = (props) => {
     await AdMobRewarded.addEventListener("rewardedVideoDidStart", () =>
         console.log("Video did start")
     );
-}, [startAd])
+}, [startAd,AdMobRewarded])
 
    const startAd = async ()  => {
      console.log('L')
-   
-    await AdMobRewarded.showAdAsync();
+     try {
+     await AdMobRewarded.requestAdAsync();
+    
+     await AdMobRewarded.showAdAsync();
+     }catch{
+       console.log('error')
+       await AdMobRewarded.showAdAsync();
+       
+
+     }
   }
 
     return (
